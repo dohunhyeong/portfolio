@@ -592,14 +592,14 @@
   <text x="865" y="418" text-anchor="middle" fill="#64748B" font-size="12">통/반·상세주소 제거</text>
 
   <!-- 수동정제 → post_final (직선 수직 경로) -->
-  <line x1="865" y1="340" x2="865" y2="296" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
-  <text x="920" y="316" fill="#059669" font-size="13" font-weight="700">성공</text>
+  <line x1="865" y1="340" x2="865" y2="236" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="920" y="290" fill="#059669" font-size="13" font-weight="700">성공</text>
 
   <!-- post_final 노드 -->
-  <rect x="760" y="204" width="210" height="90" rx="8" fill="#ECFDF5" stroke="#059669" stroke-width="2"/>
-  <text x="865" y="238" text-anchor="middle" font-size="20">✅</text>
-  <text x="865" y="262" text-anchor="middle" fill="#047857" font-size="15" font-weight="700">post_final_N.csv</text>
-  <text x="865" y="282" text-anchor="middle" fill="#64748B" font-size="12">복구 성공</text>
+  <rect x="760" y="144" width="210" height="90" rx="8" fill="#ECFDF5" stroke="#059669" stroke-width="2"/>
+  <text x="865" y="178" text-anchor="middle" font-size="20">✅</text>
+  <text x="865" y="202" text-anchor="middle" fill="#047857" font-size="15" font-weight="700">post_final_N.csv</text>
+  <text x="865" y="222" text-anchor="middle" fill="#64748B" font-size="12">복구 성공</text>
 
   <!-- 수동정제 → post_error (아래쪽) -->
   <line x1="865" y1="430" x2="865" y2="480" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
@@ -612,30 +612,28 @@
   <text x="865" y="558" text-anchor="middle" fill="#64748B" font-size="12">최종 실패</text>
 
   <!-- =====  <!-- error_merge.py 병합 (final_address → post_final) -->
-  <!-- final_address 오른쪽 → error_merge → post_final 왼쪽 -->
-  <line x1="660" y1="249" x2="760" y2="249" stroke="#2563EB" stroke-width="2" marker-end="url(#arr-blue)"/>
+  <!-- final_address 오른쪽 → error_merge → post_final 왼쪽 (꺾인 경로) -->
+  <polyline points="660,249 710,249 710,189 760,189" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#arr-blue)"/>
   <!-- error_merge 라벨 (두 노드 사이 화살표 선 중간, 노드 위에 배치) -->
-  <rect x="678" y="168" width="86" height="40" rx="6" fill="#2563EB"/>
-  <text x="721" y="185" text-anchor="middle" fill="white" font-size="12" font-weight="700">error_merge</text>
-  <text x="721" y="201" text-anchor="middle" fill="#BFDBFE" font-size="11">.py</text>
+  <rect x="668" y="108" width="86" height="40" rx="6" fill="#2563EB"/>
+  <text x="711" y="125" text-anchor="middle" fill="white" font-size="12" font-weight="700">error_merge</text>
+  <text x="711" y="141" text-anchor="middle" fill="#BFDBFE" font-size="11">.py</text>
   <!-- 라벨에서 화살표 선으로 연결하는 작은 수직선 -->
-  <line x1="721" y1="208" x2="721" y2="249" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <line x1="711" y1="148" x2="711" y2="189" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="3,2"/>
 
   <!-- ===== post_final → final_merged (위쪽 경로) ===== -->
-  <line x1="970" y1="249" x2="1060" y2="249" stroke="#94A3B8" stroke-width="2"/>
-  <line x1="1060" y1="249" x2="1060" y2="204" stroke="#94A3B8" stroke-width="2"/>
-  <line x1="1060" y1="204" x2="1100" y2="204" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="970" y1="189" x2="1100" y2="189" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
 
   <!-- ===== COL 4: final_merged / 완성데이터 (x=1100~1340) ===== -->
   <!-- Stage 4 라벨 -->
-  <rect x="1100" y="170" width="100" height="28" rx="14" fill="#1A1A2E" stroke="white" stroke-width="1.5"/>
-  <text x="1150" y="189" text-anchor="middle" fill="white" font-size="13" font-weight="700">Stage 4</text>
+  <rect x="1100" y="108" width="100" height="28" rx="14" fill="#1A1A2E" stroke="white" stroke-width="1.5"/>
+  <text x="1150" y="127" text-anchor="middle" fill="white" font-size="13" font-weight="700">Stage 4</text>
 
   <!-- final_merged 노드 -->
-  <rect x="1100" y="160" width="210" height="90" rx="8" fill="white" stroke="#2563EB" stroke-width="2"/>
-  <text x="1205" y="194" text-anchor="middle" font-size="20">🗂️</text>
-  <text x="1205" y="218" text-anchor="middle" fill="#1A1A2E" font-size="15" font-weight="700">final_merged_output</text>
-  <text x="1205" y="238" text-anchor="middle" fill="#64748B" font-size="12">전체 배치 통합</text>
+  <rect x="1100" y="140" width="210" height="90" rx="8" fill="white" stroke="#2563EB" stroke-width="2"/>
+  <text x="1205" y="174" text-anchor="middle" font-size="20">🗂️</text>
+  <text x="1205" y="198" text-anchor="middle" fill="#1A1A2E" font-size="15" font-weight="700">final_merged_output</text>
+  <text x="1205" y="218" text-anchor="middle" fill="#64748B" font-size="12">전체 배치 통합</text>
 
   <!-- final_merged → 완성 데이터 -->
   <line x1="1205" y1="250" x2="1205" y2="300" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
