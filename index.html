@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dohunhyeong | Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --blue: #2563EB;
+      --blue-light: #3B82F6;
+      --navy: #1A1A2E;
+      --bg: #F0F2F5;
+      --white: #FFFFFF;
+      --gray: #64748B;
+      --gray-light: #E2E8F0;
+      --green: #059669;
+      --red: #E53E3E;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: var(--bg);
+      color: var(--navy);
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(26,26,46,0.97);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 64px;
+    }
+    .nav-logo { color: var(--white); font-weight: 900; font-size: 20px; text-decoration: none; letter-spacing: -0.5px; }
+    .nav-logo span { color: var(--blue-light); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { color: #94A3B8; text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--white); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--navy) 0%, #16213E 60%, #0F3460 100%);
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 80px 24px 60px;
+    }
+    .hero-inner { max-width: 800px; }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(37,99,235,0.2);
+      border: 1px solid rgba(37,99,235,0.5);
+      color: var(--blue-light);
+      font-size: 13px; font-weight: 700;
+      padding: 6px 18px; border-radius: 20px;
+      margin-bottom: 28px; letter-spacing: 1px; text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 900; color: var(--white);
+      line-height: 1.2; margin-bottom: 20px; letter-spacing: -1px;
+    }
+    .hero h1 .highlight { color: var(--blue-light); }
+    .hero-sub {
+      font-size: 18px; color: #94A3B8;
+      max-width: 560px; margin: 0 auto 40px;
+    }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 48px; }
+    .tag {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #CBD5E1; font-size: 13px; font-weight: 500;
+      padding: 6px 16px; border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .hero-stats {
+      display: flex; gap: 48px; justify-content: center; flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 40px; font-weight: 900; color: var(--white); line-height: 1; }
+    .stat-num span { color: var(--blue-light); }
+    .stat-label { font-size: 13px; color: #64748B; margin-top: 4px; }
+
+    /* ── SECTION COMMON ── */
+    section { padding: 100px 24px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      color: var(--blue); font-size: 13px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(28px, 3vw, 42px); font-weight: 900;
+      color: var(--navy); margin-bottom: 16px; line-height: 1.2;
+    }
+    .section-desc { font-size: 16px; color: var(--gray); max-width: 600px; margin-bottom: 60px; }
+
+    /* ── PROBLEM ── */
+    .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .problem-card {
+      background: var(--white);
+      border-radius: 12px; padding: 32px;
+      border-top: 4px solid var(--red);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+    .problem-card.solution { border-top-color: var(--green); }
+    .card-icon { font-size: 32px; margin-bottom: 16px; }
+    .card-title { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+    .card-body { font-size: 15px; color: var(--gray); line-height: 1.8; }
+    .card-body strong { color: var(--navy); }
+
+    /* ── PIPELINE ── */
+    #pipeline { background: var(--navy); }
+    #pipeline .section-title { color: var(--white); }
+    #pipeline .section-desc { color: #94A3B8; }
+    #pipeline .section-label { color: var(--blue-light); }
+    .pipeline-steps { display: flex; flex-direction: column; gap: 0; }
+    .pipeline-step {
+      display: flex; align-items: flex-start; gap: 24px;
+      padding: 28px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .pipeline-step:last-child { border-bottom: none; }
+    .step-num {
+      flex-shrink: 0; width: 48px; height: 48px;
+      background: var(--blue); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 900; color: var(--white);
+    }
+    .step-content { flex: 1; }
+    .step-name { font-size: 18px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+    .step-file {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px; color: var(--blue-light);
+      background: rgba(37,99,235,0.15); padding: 2px 10px; border-radius: 4px;
+      display: inline-block; margin-bottom: 8px;
+    }
+    .step-desc { font-size: 14px; color: #94A3B8; }
+    .step-arrow {
+      flex-shrink: 0; color: #475569; font-size: 20px;
+      margin-top: 12px;
+    }
+
+    /* ── TECH STACK ── */
+    .tech-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .tech-card {
+      background: var(--white); border-radius: 12px; padding: 28px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border-left: 4px solid var(--blue);
+    }
+    .tech-name { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .tech-desc { font-size: 14px; color: var(--gray); }
+
+    /* ── SLIDES ── */
+    #slides { background: var(--white); }
+    .slides-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .slide-card {
+      border-radius: 10px; overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .slide-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.14); }
+    .slide-card img { width: 100%; display: block; }
+    .slide-card-label {
+      padding: 12px 16px;
+      background: var(--navy); color: #94A3B8;
+      font-size: 13px; font-weight: 500;
+    }
+    .slide-card-label strong { color: var(--white); display: block; margin-bottom: 2px; }
+
+    /* ── RESULTS ── */
+    .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .result-card {
+      background: var(--navy); border-radius: 12px; padding: 36px 28px;
+      text-align: center;
+    }
+    .result-num {
+      font-size: 52px; font-weight: 900; color: var(--white);
+      line-height: 1; margin-bottom: 8px;
+    }
+    .result-num .accent { color: var(--blue-light); }
+    .result-label { font-size: 15px; color: #94A3B8; }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.92); align-items: center; justify-content: center;
+    }
+    .lightbox.active { display: flex; }
+    .lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 8px; }
+    .lightbox-close {
+      position: fixed; top: 24px; right: 32px;
+      color: var(--white); font-size: 36px; cursor: pointer;
+      background: none; border: none; line-height: 1;
+    }
+    .lightbox-nav {
+      position: fixed; top: 50%; transform: translateY(-50%);
+      background: rgba(255,255,255,0.1); border: none;
+      color: var(--white); font-size: 28px; cursor: pointer;
+      padding: 12px 16px; border-radius: 8px;
+    }
+    .lightbox-prev { left: 20px; }
+    .lightbox-next { right: 20px; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy); color: #475569;
+      text-align: center; padding: 40px 24px;
+      font-size: 14px;
+    }
+    footer a { color: var(--blue-light); text-decoration: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .problem-grid { grid-template-columns: 1fr; }
+      .tech-grid { grid-template-columns: 1fr 1fr; }
+      .results-grid { grid-template-columns: 1fr; }
+      .hero-stats { gap: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">dohun<span>hyeong</span></a>
+  <ul class="nav-links">
+    <li><a href="#problem">문제 상황</a></li>
+    <li><a href="#pipeline">파이프라인</a></li>
+    <li><a href="#tech">기술 스택</a></li>
+    <li><a href="#slides">슬라이드</a></li>
+    <li><a href="#results">성과</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">Data Engineering Portfolio</div>
+    <h1>한국 주소 데이터<br><span class="highlight">전처리 자동화 파이프라인</span></h1>
+    <p class="hero-sub">80만 건의 비정형 주소 데이터를 Juso API와 자동화 스크립트로 단 하루 만에 100% 표준화</p>
+    <div class="hero-tags">
+      <span class="tag">Python</span>
+      <span class="tag">Pandas</span>
+      <span class="tag">Juso API</span>
+      <span class="tag">Batch Processing</span>
+      <span class="tag">Error Recovery</span>
+      <span class="tag">Data Pipeline</span>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">80<span>만</span></div>
+        <div class="stat-label">처리 데이터 건수</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">100<span>%</span></div>
+        <div class="stat-label">전처리 정확도</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">3,200<span>%</span></div>
+        <div class="stat-label">처리 속도 향상</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">160<span>일→1일</span></div>
+        <div class="stat-label">예상 소요 기간 단축</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="section-inner">
+    <div class="section-label">Problem & Solution</div>
+    <h2 class="section-title">두 가지 장벽, 하나의 해결책</h2>
+    <p class="section-desc">80만 건의 코로나19 환자 주소 데이터를 처리하는 데 있어 기술적·시간적 한계에 직면했습니다.</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="card-icon">⏱️</div>
+        <div class="card-title">시간적 장벽</div>
+        <div class="card-body">수동 웹 검색 방식으로는 일일 최대 처리량이 <strong>약 5,000건</strong>으로, 전체 80만 건을 처리하는 데 <strong>약 160일</strong>이 소요될 것으로 예상되었습니다. 프로젝트 마감 기한 내 완수가 물리적으로 불가능한 상황이었습니다.</div>
+      </div>
+      <div class="problem-card">
+        <div class="card-icon">🔧</div>
+        <div class="card-title">기술적 장벽</div>
+        <div class="card-body">도로명 주소와 지번 주소의 체계 차이로 인해 <strong>단순 정규식만으로는 변환에 한계</strong>가 있었습니다. 상세주소, 통/반 정보, 폐지된 주소 등 다양한 비정형 패턴이 혼재했습니다.</div>
+      </div>
+      <div class="problem-card solution">
+        <div class="card-icon">🔍</div>
+        <div class="card-title">해결책 발견: Juso API 분석</div>
+        <div class="card-body">행정안전부의 <strong>Juso API</strong>를 분석하여 자동화 가능성을 확인했습니다. API 요청 실패 원인을 면밀히 파악하고, 정제 로직과 수동 개입이 조화된 2단계 에러 복구 시스템을 설계했습니다.</div>
+      </div>
+      <div class="problem-card solution">
+        <div class="card-icon">🚀</div>
+        <div class="card-title">자동화 파이프라인 구축</div>
+        <div class="card-body">6단계 파이프라인을 설계하여 비정형 주소를 표준 행정구역 체계(시/도, 시/군/구, 읍/면/동)로 자동 변환했습니다. <strong>160일 → 1일</strong>로 처리 시간을 단축했습니다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PIPELINE -->
+<section id="pipeline">
+  <div class="section-inner">
+    <div class="section-label">Architecture</div>
+    <h2 class="section-title">6단계 파이프라인 구조</h2>
+    <p class="section-desc">원본 Excel 파일에서 완성 데이터까지, 각 단계별 역할과 스크립트를 확인하세요.</p>
+    <div class="pipeline-steps">
+      <div class="pipeline-step">
+        <div class="step-num">0</div>
+        <div class="step-content">
+          <div class="step-name">데이터 준비 — 원본 Excel → CSV 변환</div>
+          <div class="step-file">preprocessing.ipynb</div>
+          <div class="step-desc">원본 Excel 파일의 인코딩을 UTF-8로 변환하고, 필요한 컬럼을 검증하여 CSV 형식으로 저장합니다.</div>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-name">데이터 분할 — 5,000건 단위 배치 생성</div>
+          <div class="step-file">data_splitting.py</div>
+          <div class="step-desc">80만 건의 데이터를 5,000건 단위로 분할합니다. 네트워크 불안정 시 최대 손실 범위를 관리 가능한 수준으로 제한합니다.</div>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-name">1차 API 동기화 — Juso API 주소 변환</div>
+          <div class="step-file">sync_address.py</div>
+          <div class="step-desc">각 배치에 대해 Juso API를 호출하여 주소를 표준화합니다. 성공 결과는 final_address_N.csv, 실패 결과는 error_address_N.csv로 분리 저장됩니다.</div>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-name">2차 에러 복구 — 수동 정제 후 재처리</div>
+          <div class="step-file">sync_error.py</div>
+          <div class="step-desc">1차 실패 데이터를 수동으로 정제(통/반·상세주소 제거)한 후, 2차 API 처리를 수행합니다. 원본 인덱스를 보존하여 정확한 위치에 결과를 병합합니다.</div>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-name">최종 병합 — 전체 배치 통합</div>
+          <div class="step-file">merge.py &amp; error_merge.py</div>
+          <div class="step-desc">복구 성공 데이터를 pd.isna() 체크로 선택적 업데이트하여 기존 성공 데이터를 보호하고, 전체 배치를 final_merged_output.xlsx로 통합합니다.</div>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-name">수동 검토 — 최종 잔여 에러 처리</div>
+          <div class="step-file">주소정보누리집 활용</div>
+          <div class="step-desc">자동화 이후에도 남은 NaN 값(폐지된 주소 등)을 주소정보누리집에서 수동으로 검색하여 100% 정확도를 달성합니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section id="tech">
+  <div class="section-inner">
+    <div class="section-label">Tech Stack</div>
+    <h2 class="section-title">핵심 기술 및 설계 원칙</h2>
+    <p class="section-desc">데이터 안정성과 처리 효율을 동시에 달성하기 위한 기술적 선택들입니다.</p>
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="tech-name">Python & Pandas</div>
+        <div class="tech-desc">대용량 데이터를 배치 단위로 분할하여 메모리 초과 없이 안전하게 처리. pd.isna() 기반 선택적 업데이트로 데이터 무결성 보장.</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-name">Juso API (행정안전부)</div>
+        <div class="tech-desc">공공 데이터 포털 주소 API 연동. hstryYn="Y" 옵션으로 폐지된 주소까지 검색하여 변환 성공률 향상.</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-name">지능형 재시도 로직</div>
+        <div class="tech-desc">HTTP 에러, API 에러, 네트워크 에러를 3단계로 분류하여 처리. retries=3, delay=3초의 백오프 전략으로 API 서버 부하 방지.</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-name">배치 처리 아키텍처</div>
+        <div class="tech-desc">5,000건 단위 분할로 API 호출당 약 25~40분 처리. 네트워크 불안정 시 최대 손실을 5,000건으로 제한하여 장애 복구 비용 최소화.</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-name">원본 인덱스 보존</div>
+        <div class="tech-desc">배치 분할 이후에도 원본 Index 컬럼을 보존하여, 에러 복구 후 정확한 위치에 결과를 병합. 데이터 일관성 100% 유지.</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-name">자동+수동 하이브리드</div>
+        <div class="tech-desc">자동화로 처리 불가능한 폐지 주소, 특수 케이스는 수동 검토로 보완. 두 방식의 조합으로 100% 정확도 달성.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDES -->
+<section id="slides">
+  <div class="section-inner">
+    <div class="section-label">Presentation Slides</div>
+    <h2 class="section-title">포트폴리오 슬라이드</h2>
+    <p class="section-desc">프로젝트의 전체 내용을 담은 슬라이드입니다. 이미지를 클릭하면 크게 볼 수 있습니다.</p>
+    <div class="slides-grid" id="slidesGrid">
+      <div class="slide-card" onclick="openLightbox(0)">
+        <img src="./address-data-pipeline/images/slide-01.png" alt="Slide 1" loading="lazy" />
+        <div class="slide-card-label"><strong>슬라이드 1</strong>프로젝트 개요</div>
+      </div>
+      <div class="slide-card" onclick="openLightbox(1)">
+        <img src="./address-data-pipeline/images/slide-02.png" alt="Slide 2" loading="lazy" />
+        <div class="slide-card-label"><strong>슬라이드 2</strong>문제 상황: 두 가지 장벽</div>
+      </div>
+      <div class="slide-card" onclick="openLightbox(2)">
+        <img src="./address-data-pipeline/images/slide-03.png" alt="Slide 3" loading="lazy" />
+        <div class="slide-card-label"><strong>슬라이드 3</strong>해결책 발견: Juso API 분석</div>
+      </div>
+      <div class="slide-card" onclick="openLightbox(3)">
+        <img src="./address-data-pipeline/images/slide-04.png" alt="Slide 4" loading="lazy" />
+        <div class="slide-card-label"><strong>슬라이드 4</strong>기술 스택 및 핵심 설계</div>
+      </div>
+      <div class="slide-card" onclick="openLightbox(4)">
+        <img src="./address-data-pipeline/images/slide-05.png" alt="Slide 5" loading="lazy" />
+        <div class="slide-card-label"><strong>슬라이드 5</strong>6단계 파이프라인 전체 구조</div>
+      </div>
+      <div class="slide-card" onclick="openLightbox(5)">
+        <img src="./address-data-pipeline/images/slide-06.png" alt="Slide 6" loading="lazy" />
+        <div class="slide-card-label"><strong>슬라이드 6</strong>지능형 API 재시도 로직</div>
+      </div>
+      <div class="slide-card" onclick="openLightbox(6)">
+        <img src="./address-data-pipeline/images/slide-07.png" alt="Slide 7" loading="lazy" />
+        <div class="slide-card-label"><strong>슬라이드 7</strong>5,000건 배치 전략</div>
+      </div>
+      <div class="slide-card" onclick="openLightbox(7)">
+        <img src="./address-data-pipeline/images/slide-08.png" alt="Slide 8" loading="lazy" />
+        <div class="slide-card-label"><strong>슬라이드 8</strong>아키텍처: 2단계 에러 복구 시스템</div>
+      </div>
+      <div class="slide-card" onclick="openLightbox(8)">
+        <img src="./address-data-pipeline/images/slide-09.png" alt="Slide 9" loading="lazy" />
+        <div class="slide-card-label"><strong>슬라이드 9</strong>에러 복구 시스템 상세</div>
+      </div>
+      <div class="slide-card" onclick="openLightbox(9)">
+        <img src="./address-data-pipeline/images/slide-10.png" alt="Slide 10" loading="lazy" />
+        <div class="slide-card-label"><strong>슬라이드 10</strong>실행한 액션 및 팀 표준화</div>
+      </div>
+      <div class="slide-card" onclick="openLightbox(10)">
+        <img src="./address-data-pipeline/images/slide-11.png" alt="Slide 11" loading="lazy" />
+        <div class="slide-card-label"><strong>슬라이드 11</strong>성과: 3,200% 처리량 향상</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results">
+  <div class="section-inner">
+    <div class="section-label">Results</div>
+    <h2 class="section-title">핵심 성과 요약</h2>
+    <p class="section-desc">자동화 파이프라인 구축을 통해 달성한 정량적 성과입니다.</p>
+    <div class="results-grid">
+      <div class="result-card">
+        <div class="result-num">3,200<span class="accent">%</span></div>
+        <div class="result-label">일일 처리량 향상<br>5,000건 → 160,000건+</div>
+      </div>
+      <div class="result-card">
+        <div class="result-num">160<span class="accent">일→1일</span></div>
+        <div class="result-label">예상 소요 기간 단축<br>마감 기한 내 완수</div>
+      </div>
+      <div class="result-card">
+        <div class="result-num">100<span class="accent">%</span></div>
+        <div class="result-label">전처리 정확도<br>80만 건 누락 없이 표준화</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2024 dohunhyeong · <a href="https://github.com/dohunhyeong/portfolio" target="_blank">GitHub Repository</a></p>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightboxOnBg(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">×</button>
+  <button class="lightbox-nav lightbox-prev" onclick="changeSlide(-1)">&#8249;</button>
+  <img id="lightboxImg" src="" alt="Slide" />
+  <button class="lightbox-nav lightbox-next" onclick="changeSlide(1)">&#8250;</button>
+</div>
+
+<script>
+  const slideImages = [
+    './address-data-pipeline/images/slide-01.png',
+    './address-data-pipeline/images/slide-02.png',
+    './address-data-pipeline/images/slide-03.png',
+    './address-data-pipeline/images/slide-04.png',
+    './address-data-pipeline/images/slide-05.png',
+    './address-data-pipeline/images/slide-06.png',
+    './address-data-pipeline/images/slide-07.png',
+    './address-data-pipeline/images/slide-08.png',
+    './address-data-pipeline/images/slide-09.png',
+    './address-data-pipeline/images/slide-10.png',
+    './address-data-pipeline/images/slide-11.png',
+  ];
+  let currentIdx = 0;
+
+  function openLightbox(idx) {
+    currentIdx = idx;
+    document.getElementById('lightboxImg').src = slideImages[idx];
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  function closeLightboxOnBg(e) {
+    if (e.target === document.getElementById('lightbox')) closeLightbox();
+  }
+  function changeSlide(dir) {
+    currentIdx = (currentIdx + dir + slideImages.length) % slideImages.length;
+    document.getElementById('lightboxImg').src = slideImages[currentIdx];
+  }
+  document.addEventListener('keydown', function(e) {
+    if (document.getElementById('lightbox').classList.contains('active')) {
+      if (e.key === 'ArrowRight') changeSlide(1);
+      if (e.key === 'ArrowLeft') changeSlide(-1);
+      if (e.key === 'Escape') closeLightbox();
+    }
+  });
+</script>
+</body>
+</html>
