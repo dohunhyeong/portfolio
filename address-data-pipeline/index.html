@@ -549,9 +549,6 @@
   <text x="125" y="412" text-anchor="middle" fill="#64748B" font-size="12">5,000건 단위 분할</text>
 
   <!-- ===== 배치 → 분기 (Stage 2) ===== -->
-  <!-- Stage 2 라벨 (배치 오른쪽) -->
-  <rect x="230" y="366" width="220" height="28" rx="14" fill="#1A1A2E" stroke="white" stroke-width="1.5"/>
-  <text x="340" y="385" text-anchor="middle" fill="white" font-size="13" font-weight="700">Stage 2 (sync_address.py)</text>
   <!-- 배치 → 분기점 수평선 -->
   <line x1="230" y1="379" x2="370" y2="379" stroke="#94A3B8" stroke-width="2"/>
   <!-- 분기점 수직선 (위아래) -->
@@ -560,9 +557,12 @@
   <line x1="370" y1="249" x2="450" y2="249" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
   <!-- 아래쪽 → error_address -->
   <line x1="370" y1="379" x2="450" y2="379" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
-  <!-- 성공/실패 라벨 (화살표 선 위에 배치, 노드 위) -->
+  <!-- Stage 2 라벨 (화살표 아래로 이동) -->
+  <rect x="230" y="392" width="220" height="28" rx="14" fill="#1A1A2E" stroke="white" stroke-width="1.5"/>
+  <text x="340" y="411" text-anchor="middle" fill="white" font-size="13" font-weight="700">Stage 2 (sync_address.py)</text>
+  <!-- 성공/실패 라벨 -->
   <text x="410" y="196" text-anchor="middle" fill="#059669" font-size="13" font-weight="700">성공</text>
-  <text x="410" y="406" text-anchor="middle" fill="#E53E3E" font-size="13" font-weight="700">실패</text>
+  <text x="410" y="430" text-anchor="middle" fill="#E53E3E" font-size="13" font-weight="700">실패</text>
 
   <!-- ===== COL 2: final_address / error_address (x=450~680) ===== -->
   <!-- final_address 노드 -->
