@@ -560,9 +560,9 @@
   <line x1="370" y1="249" x2="450" y2="249" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
   <!-- 아래쪽 → error_address -->
   <line x1="370" y1="379" x2="450" y2="379" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
-  <!-- 성공/실패 라벨 -->
-  <text x="410" y="238" text-anchor="middle" fill="#059669" font-size="13" font-weight="700">성공</text>
-  <text x="410" y="400" text-anchor="middle" fill="#E53E3E" font-size="13" font-weight="700">실패</text>
+  <!-- 성공/실패 라벨 (화살표 선 위에 배치, 노드 위) -->
+  <text x="410" y="196" text-anchor="middle" fill="#059669" font-size="13" font-weight="700">성공</text>
+  <text x="410" y="326" text-anchor="middle" fill="#E53E3E" font-size="13" font-weight="700">실패</text>
 
   <!-- ===== COL 2: final_address / error_address (x=450~680) ===== -->
   <!-- final_address 노드 -->
@@ -591,11 +591,9 @@
   <text x="865" y="398" text-anchor="middle" fill="#B45309" font-size="15" font-weight="700">수동 주소 정제</text>
   <text x="865" y="418" text-anchor="middle" fill="#64748B" font-size="12">통/반·상세주소 제거</text>
 
-  <!-- 수동정제 → post_final (위쪽 경로) -->
-  <line x1="865" y1="340" x2="865" y2="308" stroke="#94A3B8" stroke-width="2"/>
-  <line x1="865" y1="308" x2="760" y2="308" stroke="#94A3B8" stroke-width="2"/>
-  <line x1="760" y1="308" x2="760" y2="294" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
-  <text x="812" y="298" text-anchor="middle" fill="#059669" font-size="13" font-weight="700">성공</text>
+  <!-- 수동정제 → post_final (직선 수직 경로) -->
+  <line x1="865" y1="340" x2="865" y2="296" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="888" y="322" fill="#059669" font-size="13" font-weight="700">성공</text>
 
   <!-- post_final 노드 -->
   <rect x="760" y="204" width="210" height="90" rx="8" fill="#ECFDF5" stroke="#059669" stroke-width="2"/>
