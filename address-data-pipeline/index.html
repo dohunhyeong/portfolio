@@ -502,117 +502,161 @@
     <div class="sec-desc">원본 Excel 파일에서 시작하여 완성 데이터까지 이어지는 6단계 파이프라인 전체 흐름입니다. 각 단계는 독립 스크립트로 구성되어 개별 실행 및 재시도가 가능합니다.</div>
   </div>
 
-  <!-- Pipeline Diagram -->
+  <!-- Pipeline Diagram SVG -->
   <div class="diagram-wrapper">
     <div class="diagram-label">Architecture 1 — 6-Stage Pipeline</div>
     <div class="diagram-scroll">
-      <div class="pipe-diagram">
-        <!-- Stage Labels -->
-        <div class="pd-stage" style="top:128px; left:110px; transform:translate(-50%,-50%);">Stage 0</div>
-        <div class="pd-stage" style="top:268px; left:110px; transform:translate(-50%,-50%);">Stage 1</div>
-        <div class="pd-stage" style="top:348px; left:258px; transform:translate(-50%,-50%);">Stage 2 (sync_address)</div>
-        <div class="pd-stage" style="top:280px; left:690px; transform:translate(-50%,-50%);">Stage 3 (sync_error)</div>
-        <div class="pd-stage" style="top:136px; left:730px; transform:translate(-50%,-50%);">Stage 4</div>
-        <div class="pd-stage" style="top:268px; left:1050px; transform:translate(-50%,-50%);">Stage 5</div>
-        <div class="pd-stage blue" style="top:208px; left:634px; transform:translate(-50%,-50%);">error_merge.py</div>
+      <div style="padding:28px 24px;">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 560" width="1160" height="560" font-family="'Noto Sans KR', sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#94A3B8"/>
+    </marker>
+    <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#2563EB"/>
+    </marker>
+  </defs>
 
-        <!-- Col 1 Nodes -->
-        <div class="pd-node" style="top:20px; left:40px;">
-          <div class="ni">📊</div>
-          <div class="nt">원본 Excel 파일</div>
-          <div class="nd">preprocessing.ipynb</div>
-        </div>
-        <div class="pd-node" style="top:158px; left:40px;">
-          <div class="ni">📄</div>
-          <div class="nt">CSV 파일</div>
-          <div class="nd">인코딩 변환 / 컬럼 검증</div>
-        </div>
-        <div class="pd-node" style="top:298px; left:40px;">
-          <div class="ni">📦</div>
-          <div class="nt">배치 CSV들</div>
-          <div class="nd">5,000건 단위 분할</div>
-        </div>
+  <!-- ===== COL 1: 원본→CSV→배치 (x=20~230, 세로 배치) ===== -->
+  <!-- Stage 0 라벨 -->
+  <rect x="55" y="8" width="110" height="26" rx="13" fill="#1A1A2E" stroke="white" stroke-width="1.5"/>
+  <text x="110" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="700">Stage 0</text>
+  <!-- 원본 Excel 노드 -->
+  <rect x="20" y="40" width="190" height="80" rx="8" fill="white" stroke="#2563EB" stroke-width="2"/>
+  <text x="115" y="72" text-anchor="middle" font-size="18">📊</text>
+  <text x="115" y="92" text-anchor="middle" fill="#1A1A2E" font-size="14" font-weight="700">원본 Excel 파일</text>
+  <text x="115" y="110" text-anchor="middle" fill="#64748B" font-size="12">preprocessing.ipynb</text>
 
-        <!-- Col 2 Nodes -->
-        <div class="pd-node success" style="top:158px; left:360px;">
-          <div class="ni">✅</div>
-          <div class="nt" style="color:#047857;">final_address_N.csv</div>
-          <div class="nd">1차 변환 성공</div>
-        </div>
-        <div class="pd-node error" style="top:298px; left:360px;">
-          <div class="ni">❌</div>
-          <div class="nt" style="color:#B91C1C;">error_address_N.csv</div>
-          <div class="nd">1차 변환 실패</div>
-        </div>
+  <!-- 화살표: Excel→CSV -->
+  <line x1="115" y1="120" x2="115" y2="155" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
 
-        <!-- Col 3 Nodes -->
-        <div class="pd-node success" style="top:138px; left:640px;">
-          <div class="ni">✅</div>
-          <div class="nt" style="color:#047857;">post_final_N.csv</div>
-          <div class="nd">복구 성공</div>
-        </div>
-        <div class="pd-node manual" style="top:298px; left:640px;">
-          <div class="ni">✏️</div>
-          <div class="nt" style="color:#B45309;">수동 주소 정제</div>
-          <div class="nd">통/반·상세주소 제거</div>
-        </div>
-        <div class="pd-node error" style="top:430px; left:640px;">
-          <div class="ni">❌</div>
-          <div class="nt" style="color:#B91C1C;">post_error_N.csv</div>
-          <div class="nd">최종 실패</div>
-        </div>
+  <!-- Stage 1 라벨 -->
+  <rect x="55" y="158" width="110" height="26" rx="13" fill="#1A1A2E" stroke="white" stroke-width="1.5"/>
+  <text x="110" y="175" text-anchor="middle" fill="white" font-size="12" font-weight="700">Stage 1</text>
+  <!-- CSV 파일 노드 -->
+  <rect x="20" y="190" width="190" height="80" rx="8" fill="white" stroke="#2563EB" stroke-width="2"/>
+  <text x="115" y="222" text-anchor="middle" font-size="18">📄</text>
+  <text x="115" y="242" text-anchor="middle" fill="#1A1A2E" font-size="14" font-weight="700">CSV 파일</text>
+  <text x="115" y="260" text-anchor="middle" fill="#64748B" font-size="12">인코딩 변환 / 컬럼 검증</text>
 
-        <!-- Col 4 Nodes -->
-        <div class="pd-node" style="top:158px; left:930px;">
-          <div class="ni">🗂️</div>
-          <div class="nt">final_merged_output.xlsx</div>
-          <div class="nd">전체 배치 통합</div>
-        </div>
-        <div class="pd-node final" style="top:298px; left:930px;">
-          <div class="ni">🎯</div>
-          <div class="nt">완성 데이터</div>
-          <div class="nd">전처리 정확도 100%</div>
-        </div>
+  <!-- 화살표: CSV→배치 -->
+  <line x1="115" y1="270" x2="115" y2="305" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
 
-        <!-- Lines: Col1 vertical -->
-        <div class="pd-line" style="top:118px; left:144px; width:2px; height:32px;"></div>
-        <div class="pd-arr-d" style="top:150px; left:140px;"></div>
-        <div class="pd-line" style="top:258px; left:144px; width:2px; height:32px;"></div>
-        <div class="pd-arr-d" style="top:290px; left:140px;"></div>
+  <!-- 배치 CSV 노드 -->
+  <rect x="20" y="310" width="190" height="80" rx="8" fill="white" stroke="#2563EB" stroke-width="2"/>
+  <text x="115" y="342" text-anchor="middle" font-size="18">📦</text>
+  <text x="115" y="362" text-anchor="middle" fill="#1A1A2E" font-size="14" font-weight="700">배치 CSV들</text>
+  <text x="115" y="380" text-anchor="middle" fill="#64748B" font-size="12">5,000건 단위 분할</text>
 
-        <!-- Batch trunk right + split -->
-        <div class="pd-line" style="top:348px; left:250px; height:2px; width:50px;"></div>
-        <div class="pd-line" style="top:208px; left:299px; width:2px; height:141px;"></div>
-        <div class="pd-line" style="top:207px; left:300px; height:2px; width:52px;"></div>
-        <div class="pd-arr-r" style="top:203px; left:352px;"></div>
-        <div class="pd-line" style="top:348px; left:300px; height:2px; width:52px;"></div>
-        <div class="pd-arr-r" style="top:344px; left:352px;"></div>
+  <!-- ===== COL 1→COL 2 분기선 ===== -->
+  <!-- 배치 오른쪽 → 수직선 → 두 방향 분기 -->
+  <!-- Stage 2 라벨 (분기선 위) -->
+  <rect x="190" y="338" width="190" height="26" rx="13" fill="#1A1A2E" stroke="white" stroke-width="1.5"/>
+  <text x="285" y="355" text-anchor="middle" fill="white" font-size="12" font-weight="700">Stage 2 (sync_address.py)</text>
+  <!-- 수평선: 배치→분기점 -->
+  <line x1="210" y1="350" x2="310" y2="350" stroke="#94A3B8" stroke-width="2"/>
+  <!-- 수직선: 분기점 상하 -->
+  <line x1="310" y1="230" x2="310" y2="350" stroke="#94A3B8" stroke-width="2"/>
+  <!-- 위쪽 화살표 → final_address -->
+  <line x1="310" y1="230" x2="390" y2="230" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+  <!-- 아래쪽 화살표 → error_address -->
+  <line x1="310" y1="350" x2="390" y2="350" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+  <!-- 성공/실패 라벨 -->
+  <text x="350" y="220" text-anchor="middle" fill="#059669" font-size="12" font-weight="700">성공</text>
+  <text x="350" y="370" text-anchor="middle" fill="#E53E3E" font-size="12" font-weight="700">실패</text>
 
-        <!-- Error1 -> Manual -->
-        <div class="pd-line" style="top:348px; left:570px; height:2px; width:62px;"></div>
-        <div class="pd-arr-r" style="top:344px; left:632px;"></div>
+  <!-- ===== COL 2: final_address / error_address ===== -->
+  <!-- final_address 노드 -->
+  <rect x="390" y="190" width="190" height="80" rx="8" fill="#ECFDF5" stroke="#059669" stroke-width="2"/>
+  <text x="485" y="222" text-anchor="middle" font-size="18">✅</text>
+  <text x="485" y="244" text-anchor="middle" fill="#047857" font-size="14" font-weight="700">final_address_N.csv</text>
+  <text x="485" y="262" text-anchor="middle" fill="#64748B" font-size="12">1차 변환 성공</text>
 
-        <!-- Manual -> Final2 (up) -->
-        <div class="pd-line" style="top:258px; left:744px; width:2px; height:32px;"></div>
-        <div class="pd-arr-u" style="top:250px; left:740px;"></div>
+  <!-- error_address 노드 -->
+  <rect x="390" y="310" width="190" height="80" rx="8" fill="#FEF2F2" stroke="#E53E3E" stroke-width="2"/>
+  <text x="485" y="342" text-anchor="middle" font-size="18">❌</text>
+  <text x="485" y="364" text-anchor="middle" fill="#B91C1C" font-size="14" font-weight="700">error_address_N.csv</text>
+  <text x="485" y="382" text-anchor="middle" fill="#64748B" font-size="12">1차 변환 실패</text>
 
-        <!-- Manual -> Error2 (down) -->
-        <div class="pd-line" style="top:398px; left:744px; width:2px; height:24px;"></div>
-        <div class="pd-arr-d" style="top:422px; left:740px;"></div>
+  <!-- ===== error_address → 수동 정제 ===== -->
+  <line x1="580" y1="350" x2="660" y2="350" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
 
-        <!-- Final2 -> Final1 (left, merge) -->
-        <div class="pd-line" style="top:207px; left:570px; height:2px; width:62px;"></div>
-        <div class="pd-arr-l" style="top:203px; left:562px;"></div>
+  <!-- ===== COL 3: post_final / 수동정제 / post_error ===== -->
+  <!-- Stage 3 라벨 -->
+  <rect x="640" y="278" width="190" height="26" rx="13" fill="#1A1A2E" stroke="white" stroke-width="1.5"/>
+  <text x="735" y="295" text-anchor="middle" fill="white" font-size="12" font-weight="700">Stage 3 (sync_error.py)</text>
 
-        <!-- Final1 -> Merged (over top) -->
-        <div class="pd-line" style="top:138px; left:484px; width:2px; height:20px;"></div>
-        <div class="pd-line" style="top:137px; left:485px; height:2px; width:555px;"></div>
-        <div class="pd-line" style="top:138px; left:1039px; width:2px; height:20px;"></div>
-        <div class="pd-arr-d" style="top:150px; left:1035px;"></div>
+  <!-- 수동 주소 정제 노드 -->
+  <rect x="660" y="310" width="190" height="80" rx="8" fill="#FFFBEB" stroke="#F59E0B" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="755" y="342" text-anchor="middle" font-size="18">✏️</text>
+  <text x="755" y="362" text-anchor="middle" fill="#B45309" font-size="14" font-weight="700">수동 주소 정제</text>
+  <text x="755" y="380" text-anchor="middle" fill="#64748B" font-size="12">통/반·상세주소 제거</text>
 
-        <!-- Merged -> Final Data -->
-        <div class="pd-line" style="top:258px; left:1034px; width:2px; height:32px;"></div>
-        <div class="pd-arr-d" style="top:290px; left:1030px;"></div>
+  <!-- 수동정제 → post_final (위쪽) -->
+  <line x1="755" y1="310" x2="755" y2="280" stroke="#94A3B8" stroke-width="2"/>
+  <line x1="755" y1="280" x2="660" y2="280" stroke="#94A3B8" stroke-width="2"/>
+  <line x1="660" y1="280" x2="660" y2="270" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="710" y="272" text-anchor="middle" fill="#059669" font-size="12" font-weight="700">성공</text>
+
+  <!-- post_final 노드 -->
+  <rect x="660" y="190" width="190" height="80" rx="8" fill="#ECFDF5" stroke="#059669" stroke-width="2"/>
+  <text x="755" y="222" text-anchor="middle" font-size="18">✅</text>
+  <text x="755" y="244" text-anchor="middle" fill="#047857" font-size="14" font-weight="700">post_final_N.csv</text>
+  <text x="755" y="262" text-anchor="middle" fill="#64748B" font-size="12">복구 성공</text>
+
+  <!-- 수동정제 → post_error (아래쪽) -->
+  <line x1="755" y1="390" x2="755" y2="430" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="770" y="415" fill="#E53E3E" font-size="12" font-weight="700">실패</text>
+
+  <!-- post_error 노드 -->
+  <rect x="660" y="430" width="190" height="80" rx="8" fill="#FEF2F2" stroke="#E53E3E" stroke-width="2"/>
+  <text x="755" y="462" text-anchor="middle" font-size="18">❌</text>
+  <text x="755" y="484" text-anchor="middle" fill="#B91C1C" font-size="14" font-weight="700">post_error_N.csv</text>
+  <text x="755" y="502" text-anchor="middle" fill="#64748B" font-size="12">최종 실패</text>
+
+  <!-- ===== error_merge.py 라벨 (final_address → post_final 병합선 위) ===== -->
+  <!-- final_address → 오른쪽으로 병합 경로 -->
+  <line x1="580" y1="230" x2="620" y2="230" stroke="#2563EB" stroke-width="2"/>
+  <line x1="620" y1="230" x2="620" y2="230" stroke="#2563EB" stroke-width="2"/>
+  <!-- post_final 왼쪽에서 병합 화살표 -->
+  <line x1="620" y1="230" x2="660" y2="230" stroke="#2563EB" stroke-width="2" marker-end="url(#arr-blue)"/>
+  <!-- error_merge 라벨 -->
+  <rect x="590" y="208" width="60" height="36" rx="6" fill="#2563EB"/>
+  <text x="620" y="223" text-anchor="middle" fill="white" font-size="11" font-weight="700">error_merge</text>
+  <text x="620" y="237" text-anchor="middle" fill="white" font-size="10">.py</text>
+
+  <!-- ===== COL 3→COL 4: 병합 후 최종 ===== -->
+  <!-- post_final → 위쪽 경로로 final_merged -->
+  <line x1="850" y1="230" x2="910" y2="230" stroke="#94A3B8" stroke-width="2"/>
+  <line x1="910" y1="230" x2="910" y2="190" stroke="#94A3B8" stroke-width="2"/>
+  <line x1="910" y1="190" x2="940" y2="190" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- final_address도 위쪽 경로로 final_merged -->
+  <!-- (이미 post_final과 병합되었으므로 post_final→final_merged 경로 하나로 표현) -->
+
+  <!-- Stage 4 라벨 -->
+  <rect x="910" y="158" width="80" height="26" rx="13" fill="#1A1A2E" stroke="white" stroke-width="1.5"/>
+  <text x="950" y="175" text-anchor="middle" fill="white" font-size="12" font-weight="700">Stage 4</text>
+
+  <!-- final_merged 노드 -->
+  <rect x="940" y="150" width="190" height="80" rx="8" fill="white" stroke="#2563EB" stroke-width="2"/>
+  <text x="1035" y="182" text-anchor="middle" font-size="18">🗂️</text>
+  <text x="1035" y="204" text-anchor="middle" fill="#1A1A2E" font-size="14" font-weight="700">final_merged_output</text>
+  <text x="1035" y="222" text-anchor="middle" fill="#64748B" font-size="12">전체 배치 통합</text>
+
+  <!-- final_merged → 완성 데이터 -->
+  <line x1="1035" y1="230" x2="1035" y2="270" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- Stage 5 라벨 -->
+  <rect x="975" y="278" width="80" height="26" rx="13" fill="#1A1A2E" stroke="white" stroke-width="1.5"/>
+  <text x="1015" y="295" text-anchor="middle" fill="white" font-size="12" font-weight="700">Stage 5</text>
+
+  <!-- 완성 데이터 노드 -->
+  <rect x="940" y="310" width="190" height="80" rx="8" fill="#1A1A2E" stroke="#1A1A2E" stroke-width="2"/>
+  <text x="1035" y="342" text-anchor="middle" font-size="18">🎯</text>
+  <text x="1035" y="364" text-anchor="middle" fill="white" font-size="14" font-weight="700">완성 데이터</text>
+  <text x="1035" y="382" text-anchor="middle" fill="#94A3B8" font-size="12">전처리 정확도 100%</text>
+</svg>
       </div>
     </div>
   </div>
@@ -783,108 +827,134 @@
     <div class="sec-desc">자동화만으로 처리 불가능한 케이스를 수동 정제와 조합하여 최종 100% 정확도를 달성했습니다. 아래 다이어그램은 에러 복구 전체 흐름을 나타냅니다.</div>
   </div>
 
-  <!-- Error Recovery Diagram -->
+  <!-- Error Recovery Diagram SVG -->
   <div class="diagram-wrapper">
     <div class="diagram-label">Architecture 2 — 2-Stage Error Recovery System</div>
     <div class="diagram-scroll">
-      <div class="er-diagram">
-        <!-- Labels -->
-        <div class="er-stage blue" style="top:88px; left:490px; transform:translate(-50%,-50%);">error_merge.py<br><span style="font-size:10px; font-weight:400;">NaN 선택적 업데이트</span></div>
-        <div class="er-badge ok" style="top:30px; left:330px;">성공</div>
-        <div class="er-badge ng" style="top:98px; left:161px;">실패</div>
-        <div class="er-badge ok" style="top:205px; left:496px;">성공</div>
-        <div class="er-badge ng" style="top:315px; left:496px;">실패</div>
-        <div class="er-badge yn yes" style="top:215px; left:816px;">Yes (미변환 잔여 데이터)</div>
-        <div class="er-badge yn no"  style="top:138px; left:917px; transform:translateX(-50%);">No (100% 변환 완료)</div>
+      <div style="padding:28px 24px;">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 460" width="1100" height="460" font-family="'Noto Sans KR', sans-serif">
+  <defs>
+    <marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#94A3B8"/>
+    </marker>
+    <marker id="arr2-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#2563EB"/>
+    </marker>
+  </defs>
 
-        <!-- Col 1 -->
-        <div class="er-node" style="top:14px; left:60px;">
-          <div class="nt">Stage 2: sync_address.py</div>
-          <div class="nd">1차 API 처리</div>
-        </div>
-        <div class="er-node error" style="top:118px; left:60px;">
-          <div class="nt" style="color:#B91C1C;">error_address_N.csv</div>
-        </div>
-        <div class="er-node manual" style="top:222px; left:60px;">
-          <div class="ni">✏️</div>
-          <div class="nt" style="color:#B45309;">수동 주소 정제</div>
-          <div class="nd">통/반, 상세주소, 호수 제거</div>
-        </div>
+  <!-- ===== COL 1: Stage2 / error_address / 수동정제 ===== -->
+  <!-- Stage 2 노드 -->
+  <rect x="20" y="20" width="200" height="70" rx="8" fill="white" stroke="#2563EB" stroke-width="2"/>
+  <text x="120" y="50" text-anchor="middle" fill="#1A1A2E" font-size="14" font-weight="700">Stage 2</text>
+  <text x="120" y="68" text-anchor="middle" fill="#1A1A2E" font-size="13" font-weight="600">sync_address.py</text>
+  <text x="120" y="84" text-anchor="middle" fill="#64748B" font-size="11">1차 API 처리</text>
 
-        <!-- Col 2 -->
-        <div class="er-node success" style="top:14px; left:370px;">
-          <div class="nt" style="color:#047857;">final_address_N.csv</div>
-        </div>
-        <div class="er-node success" style="top:118px; left:370px;">
-          <div class="nt" style="color:#047857;">post_final_N.csv</div>
-          <div class="nd">복구 성공</div>
-        </div>
-        <div class="er-node" style="top:222px; left:370px;">
-          <div class="nt">Stage 3: sync_error.py</div>
-          <div class="nd">2차 API 처리</div>
-        </div>
-        <div class="er-node error" style="top:330px; left:370px;">
-          <div class="nt" style="color:#B91C1C;">post_error_N.csv</div>
-          <div class="nd">최종 실패</div>
-        </div>
+  <!-- 성공 화살표 오른쪽 -->
+  <line x1="220" y1="55" x2="300" y2="55" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr2)"/>
+  <text x="260" y="46" text-anchor="middle" fill="#059669" font-size="12" font-weight="700">성공</text>
 
-        <!-- Col 3 -->
-        <div class="er-node" style="top:14px; left:690px;">
-          <div class="nt">Stage 4</div>
-          <div class="nd">final_merged_output.xlsx</div>
-        </div>
-        <div class="er-node decision" style="top:104px; left:755px;">
-          <div class="inner" style="width:70px;">빈칸(NaN)<br>존재?</div>
-        </div>
-        <div class="er-node" style="top:222px; left:690px;">
-          <div class="nt">Stage 5: 수동 검토</div>
-          <div class="nd">주소정보누리집 검색<br>(폐지된 주소 포함 옵션)</div>
-        </div>
+  <!-- 실패 화살표 아래쪽 -->
+  <line x1="120" y1="90" x2="120" y2="130" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr2)"/>
+  <text x="136" y="115" fill="#E53E3E" font-size="12" font-weight="700">실패</text>
 
-        <!-- Col 4 -->
-        <div class="er-node final" style="top:118px; left:970px;">
-          <div class="ni">✅</div>
-          <div class="nt">완성 데이터</div>
-        </div>
+  <!-- error_address 노드 -->
+  <rect x="20" y="130" width="200" height="60" rx="8" fill="#FEF2F2" stroke="#E53E3E" stroke-width="2"/>
+  <text x="120" y="157" text-anchor="middle" fill="#B91C1C" font-size="13" font-weight="700">error_address_N.csv</text>
+  <text x="120" y="178" text-anchor="middle" fill="#64748B" font-size="11">1차 변환 실패</text>
 
-        <!-- Lines -->
-        <!-- Stage2 -> Final1 -->
-        <div class="er-line" style="top:39px; left:270px; width:100px; height:2px;"></div>
-        <div class="er-arr-r" style="top:35px; left:370px;"></div>
-        <!-- Stage2 -> Error1 -->
-        <div class="er-line" style="top:70px; left:164px; height:48px; width:2px;"></div>
-        <div class="er-arr-d" style="top:118px; left:160px;"></div>
-        <!-- Error1 -> Manual -->
-        <div class="er-line" style="top:162px; left:164px; height:60px; width:2px;"></div>
-        <div class="er-arr-d" style="top:222px; left:160px;"></div>
-        <!-- Manual -> Stage3 -->
-        <div class="er-line" style="top:258px; left:270px; width:100px; height:2px;"></div>
-        <div class="er-arr-r" style="top:254px; left:370px;"></div>
-        <!-- Stage3 -> Final2 (up) -->
-        <div class="er-line" style="top:166px; left:474px; height:56px; width:2px;"></div>
-        <div class="er-arr-u" style="top:158px; left:470px;"></div>
-        <!-- Stage3 -> Error2 (down) -->
-        <div class="er-line" style="top:278px; left:474px; height:52px; width:2px;"></div>
-        <div class="er-arr-d" style="top:330px; left:470px;"></div>
-        <!-- Final2 -> Final1 (merge, up) -->
-        <div class="er-line" style="top:52px; left:474px; height:66px; width:2px;"></div>
-        <div class="er-arr-u" style="top:44px; left:470px;"></div>
-        <!-- Final1 -> Stage4 -->
-        <div class="er-line" style="top:39px; left:580px; width:110px; height:2px;"></div>
-        <div class="er-arr-r" style="top:35px; left:690px;"></div>
-        <!-- Stage4 -> Decision -->
-        <div class="er-line" style="top:70px; left:794px; height:34px; width:2px;"></div>
-        <div class="er-arr-d" style="top:104px; left:790px;"></div>
-        <!-- Decision -> Stage5 (Yes, down) -->
-        <div class="er-line" style="top:192px; left:794px; height:30px; width:2px;"></div>
-        <div class="er-arr-d" style="top:222px; left:790px;"></div>
-        <!-- Decision -> Final (No, right) -->
-        <div class="er-line" style="top:148px; left:843px; width:127px; height:2px;"></div>
-        <div class="er-arr-r" style="top:144px; left:970px;"></div>
-        <!-- Stage5 -> Final (around) -->
-        <div class="er-line" style="top:178px; left:1079px; height:80px; width:2px;"></div>
-        <div class="er-line" style="top:258px; left:910px; width:170px; height:2px;"></div>
-        <div class="er-arr-u" style="top:170px; left:1075px;"></div>
+  <!-- error_address → 수동정제 -->
+  <line x1="120" y1="190" x2="120" y2="240" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr2)"/>
+
+  <!-- 수동 주소 정제 노드 -->
+  <rect x="20" y="240" width="200" height="80" rx="8" fill="#FFFBEB" stroke="#F59E0B" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="120" y="268" text-anchor="middle" font-size="18">✏️</text>
+  <text x="120" y="290" text-anchor="middle" fill="#B45309" font-size="13" font-weight="700">수동 주소 정제</text>
+  <text x="120" y="308" text-anchor="middle" fill="#64748B" font-size="11">통/반, 상세주소, 호수 제거</text>
+
+  <!-- 수동정제 → Stage3 -->
+  <line x1="220" y1="280" x2="300" y2="280" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr2)"/>
+
+  <!-- ===== COL 2: final_address / post_final / Stage3 / post_error ===== -->
+  <!-- final_address 노드 -->
+  <rect x="300" y="20" width="200" height="60" rx="8" fill="#ECFDF5" stroke="#059669" stroke-width="2"/>
+  <text x="400" y="47" text-anchor="middle" fill="#047857" font-size="13" font-weight="700">final_address_N.csv</text>
+  <text x="400" y="68" text-anchor="middle" fill="#64748B" font-size="11">1차 변환 성공</text>
+
+  <!-- final_address → Stage4 (오른쪽) -->
+  <line x1="500" y1="50" x2="580" y2="50" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr2)"/>
+
+  <!-- post_final → final_address 병합 (error_merge.py) -->
+  <line x1="400" y1="140" x2="400" y2="80" stroke="#2563EB" stroke-width="2" marker-end="url(#arr2-blue)"/>
+  <!-- error_merge 라벨 박스 -->
+  <rect x="356" y="92" width="88" height="38" rx="6" fill="#2563EB"/>
+  <text x="400" y="108" text-anchor="middle" fill="white" font-size="11" font-weight="700">error_merge.py</text>
+  <text x="400" y="124" text-anchor="middle" fill="#BFDBFE" font-size="10">NaN 선택적 업데이트</text>
+
+  <!-- post_final 노드 -->
+  <rect x="300" y="140" width="200" height="60" rx="8" fill="#ECFDF5" stroke="#059669" stroke-width="2"/>
+  <text x="400" y="167" text-anchor="middle" fill="#047857" font-size="13" font-weight="700">post_final_N.csv</text>
+  <text x="400" y="188" text-anchor="middle" fill="#64748B" font-size="11">복구 성공</text>
+
+  <!-- Stage3 노드 -->
+  <rect x="300" y="240" width="200" height="70" rx="8" fill="white" stroke="#2563EB" stroke-width="2"/>
+  <text x="400" y="268" text-anchor="middle" fill="#1A1A2E" font-size="14" font-weight="700">Stage 3</text>
+  <text x="400" y="286" text-anchor="middle" fill="#1A1A2E" font-size="13" font-weight="600">sync_error.py</text>
+  <text x="400" y="302" text-anchor="middle" fill="#64748B" font-size="11">2차 API 처리</text>
+
+  <!-- Stage3 성공 → post_final -->
+  <line x1="400" y1="240" x2="400" y2="200" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr2)"/>
+  <text x="416" y="224" fill="#059669" font-size="12" font-weight="700">성공</text>
+
+  <!-- Stage3 실패 → post_error -->
+  <line x1="400" y1="310" x2="400" y2="360" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr2)"/>
+  <text x="416" y="340" fill="#E53E3E" font-size="12" font-weight="700">실패</text>
+
+  <!-- post_error 노드 -->
+  <rect x="300" y="360" width="200" height="60" rx="8" fill="#FEF2F2" stroke="#E53E3E" stroke-width="2"/>
+  <text x="400" y="387" text-anchor="middle" fill="#B91C1C" font-size="13" font-weight="700">post_error_N.csv</text>
+  <text x="400" y="408" text-anchor="middle" fill="#64748B" font-size="11">최종 실패</text>
+
+  <!-- ===== COL 3: Stage4 / 마름모(NaN 체크) / Stage5 ===== -->
+  <!-- Stage4 노드 -->
+  <rect x="580" y="20" width="200" height="60" rx="8" fill="white" stroke="#2563EB" stroke-width="2"/>
+  <text x="680" y="44" text-anchor="middle" fill="#1A1A2E" font-size="14" font-weight="700">Stage 4</text>
+  <text x="680" y="64" text-anchor="middle" fill="#64748B" font-size="11">final_merged_output.xlsx</text>
+
+  <!-- Stage4 → 마름모 -->
+  <line x1="680" y1="80" x2="680" y2="130" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr2)"/>
+
+  <!-- 마름모(의사결정) 노드: 중심 (680, 175) -->
+  <polygon points="680,130 760,175 680,220 600,175" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+  <text x="680" y="170" text-anchor="middle" fill="#1A1A2E" font-size="13" font-weight="700">빈칸(NaN)</text>
+  <text x="680" y="188" text-anchor="middle" fill="#1A1A2E" font-size="13" font-weight="700">존재?</text>
+
+  <!-- No → 오른쪽 (완성데이터) -->
+  <line x1="760" y1="175" x2="860" y2="175" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr2)"/>
+  <text x="810" y="162" text-anchor="middle" fill="#059669" font-size="12" font-weight="700">No</text>
+  <text x="810" y="176" text-anchor="middle" fill="#059669" font-size="10">(100% 변환 완료)</text>
+
+  <!-- Yes → 아래쪽 (Stage5) -->
+  <line x1="680" y1="220" x2="680" y2="280" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr2)"/>
+  <text x="698" y="254" fill="#E53E3E" font-size="12" font-weight="700">Yes</text>
+  <text x="698" y="270" fill="#E53E3E" font-size="10">(미변환 잔여데이터)</text>
+
+  <!-- Stage5 노드 -->
+  <rect x="580" y="280" width="200" height="80" rx="8" fill="white" stroke="#2563EB" stroke-width="2"/>
+  <text x="680" y="308" text-anchor="middle" fill="#1A1A2E" font-size="14" font-weight="700">Stage 5: 수동 검토</text>
+  <text x="680" y="328" text-anchor="middle" fill="#64748B" font-size="11">주소정보누리집 검색</text>
+  <text x="680" y="344" text-anchor="middle" fill="#64748B" font-size="11">(폐지된 주소 포함 옵션)</text>
+
+  <!-- Stage5 → 완성데이터 (우회 경로) -->
+  <line x1="780" y1="320" x2="840" y2="320" stroke="#94A3B8" stroke-width="2"/>
+  <line x1="840" y1="320" x2="840" y2="210" stroke="#94A3B8" stroke-width="2"/>
+  <line x1="840" y1="210" x2="860" y2="210" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr2)"/>
+
+  <!-- ===== COL 4: 완성 데이터 ===== -->
+  <rect x="860" y="150" width="200" height="80" rx="8" fill="#1A1A2E" stroke="#1A1A2E" stroke-width="2"/>
+  <text x="960" y="182" text-anchor="middle" font-size="20">✅</text>
+  <text x="960" y="208" text-anchor="middle" fill="white" font-size="15" font-weight="700">완성 데이터</text>
+  <text x="960" y="226" text-anchor="middle" fill="#94A3B8" font-size="11">전처리 정확도 100%</text>
+</svg>
       </div>
     </div>
     <div style="padding:0 20px 20px;">
@@ -897,7 +967,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div>  </div>
 
   <div class="recovery-steps" style="margin-top:8px;">
     <div class="recovery-step">
