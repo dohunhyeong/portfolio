@@ -68,12 +68,12 @@
     .hero-stats { display: flex; gap: 0; justify-content: center; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; max-width: 640px; margin: 0 auto; }
     .stat { flex: 1; padding: 24px 20px; text-align: center; border-right: 1px solid var(--border); }
     .stat:last-child { border-right: none; }
-    .stat-num { font-size: 32px; font-weight: 900; color: var(--white); line-height: 1; }
+    .stat-num { font-size: 28px; font-weight: 900; color: var(--white); line-height: 1; }
     .stat-num .accent { color: var(--blue-light); }
     .stat-label { font-size: 12px; color: var(--gray-dim); margin-top: 6px; }
 
     /* CONTENT */
-    .content { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+    .content { max-width: 960px; margin: 0 auto; padding: 0 24px; }
 
     /* SECTION HEADER */
     .sec-header { margin: 80px 0 32px; }
@@ -125,36 +125,131 @@
     .tech-name { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; color: var(--white); }
     .tech-role { font-size: 13px; color: var(--gray); line-height: 1.6; }
 
-    /* PIPELINE */
-    .pipeline { display: flex; flex-direction: column; gap: 0; }
-    .pipe-step {
-      display: flex; gap: 0; position: relative;
+    /* ===== ARCHITECTURE DIAGRAM WRAPPER ===== */
+    .diagram-wrapper {
+      background: #F0F2F5;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.1);
+      margin: 28px 0;
     }
-    .pipe-left {
-      display: flex; flex-direction: column; align-items: center;
-      width: 60px; flex-shrink: 0;
+    .diagram-label {
+      background: #1A1A2E;
+      color: var(--blue-light);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 10px 20px;
     }
-    .pipe-num {
-      width: 44px; height: 44px; border-radius: 50%;
-      background: var(--blue); display: flex; align-items: center; justify-content: center;
-      font-size: 16px; font-weight: 900; color: var(--white); flex-shrink: 0; z-index: 1;
+    .diagram-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
-    .pipe-line { width: 2px; flex: 1; background: var(--border); min-height: 20px; }
-    .pipe-step:last-child .pipe-line { display: none; }
-    .pipe-right { flex: 1; padding: 0 0 36px 20px; }
-    .pipe-name { font-size: 18px; font-weight: 700; margin-bottom: 6px; padding-top: 10px; }
-    .pipe-file {
-      font-family: 'JetBrains Mono', monospace; font-size: 12px;
-      color: var(--blue-light); background: rgba(37,99,235,0.12);
-      border: 1px solid rgba(37,99,235,0.25);
-      padding: 3px 10px; border-radius: 4px;
-      display: inline-block; margin-bottom: 10px;
+    /* ===== PIPELINE DIAGRAM (Slide 5) ===== */
+    .pipe-diagram {
+      position: relative;
+      width: 1200px;
+      height: 560px;
+      font-family: 'Noto Sans KR', sans-serif;
     }
-    .pipe-desc { font-size: 14px; color: var(--gray); line-height: 1.8; }
-    .pipe-branch { display: flex; gap: 12px; margin-top: 12px; }
-    .branch-tag { font-size: 12px; padding: 4px 12px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; }
-    .branch-success { background: rgba(52,211,153,0.1); color: var(--green); border: 1px solid rgba(52,211,153,0.25); }
-    .branch-fail { background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.25); }
+    .pd-node {
+      position: absolute;
+      background-color: #FFFFFF;
+      border: 2px solid #2563EB;
+      border-radius: 8px;
+      padding: 14px;
+      width: 210px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+      z-index: 2;
+    }
+    .pd-node.success { border-color: #059669; background-color: #ECFDF5; }
+    .pd-node.error   { border-color: #E53E3E; background-color: #FEF2F2; }
+    .pd-node.manual  { border-color: #F59E0B; background-color: #FFFBEB; border-style: dashed; }
+    .pd-node.final   { border-color: #1A1A2E; background-color: #1A1A2E; color: #FFFFFF; }
+    .pd-node .ni { font-size: 22px; margin-bottom: 6px; }
+    .pd-node .nt { font-size: 14px; font-weight: 700; color: #1A1A2E; margin-bottom: 3px; }
+    .pd-node.final .nt { color: #FFFFFF; }
+    .pd-node .nd { font-size: 12px; color: #64748B; }
+    .pd-node.final .nd { color: #94A3B8; }
+    .pd-stage {
+      position: absolute;
+      background-color: #1A1A2E; color: #FFFFFF;
+      border: 2px solid #FFFFFF;
+      padding: 4px 14px; font-size: 12px; border-radius: 20px;
+      font-weight: 700; z-index: 4; white-space: nowrap;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+    .pd-stage.blue { background-color: #2563EB; }
+    .pd-line { position: absolute; background-color: #94A3B8; z-index: 1; }
+    .pd-arr-d { position: absolute; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 8px solid #94A3B8; z-index: 2; }
+    .pd-arr-r { position: absolute; width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid #94A3B8; z-index: 2; }
+    .pd-arr-u { position: absolute; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 8px solid #94A3B8; z-index: 2; }
+    .pd-arr-l { position: absolute; width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 8px solid #94A3B8; z-index: 2; }
+
+    /* ===== ERROR RECOVERY DIAGRAM (Slide 8) ===== */
+    .er-diagram {
+      position: relative;
+      width: 1200px;
+      height: 500px;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+    .er-node {
+      position: absolute;
+      background-color: #FFFFFF;
+      border: 2px solid #2563EB;
+      border-radius: 8px;
+      padding: 12px;
+      width: 210px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+      z-index: 2;
+    }
+    .er-node.success { border-color: #059669; background-color: #ECFDF5; }
+    .er-node.error   { border-color: #E53E3E; background-color: #FEF2F2; }
+    .er-node.manual  { border-color: #F59E0B; background-color: #FFFBEB; border-style: dashed; }
+    .er-node.final   { border-color: #1A1A2E; background-color: #1A1A2E; color: #FFFFFF; }
+    .er-node.decision {
+      border-radius: 0; transform: rotate(45deg);
+      width: 88px; height: 88px; padding: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .er-node.decision .inner { transform: rotate(-45deg); font-weight: 700; font-size: 13px; color: #1A1A2E; line-height: 1.3; }
+    .er-node .ni { font-size: 16px; margin-bottom: 4px; }
+    .er-node .nt { font-size: 14px; font-weight: 700; color: #1A1A2E; margin-bottom: 3px; }
+    .er-node.final .nt { color: #FFFFFF; }
+    .er-node .nd { font-size: 12px; color: #64748B; }
+    .er-stage {
+      position: absolute;
+      background-color: #1A1A2E; color: #FFFFFF;
+      border: 2px solid #FFFFFF;
+      padding: 4px 14px; font-size: 12px; border-radius: 20px;
+      font-weight: 700; z-index: 4; white-space: nowrap;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+    .er-stage.blue { background-color: #2563EB; }
+    .er-badge {
+      position: absolute; font-size: 11px; font-weight: 700; z-index: 3;
+      background-color: rgba(255,255,255,0.92); padding: 1px 5px; border-radius: 3px;
+    }
+    .er-badge.ok { color: #059669; }
+    .er-badge.ng { color: #E53E3E; }
+    .er-badge.yn { border-radius: 4px; padding: 2px 6px; }
+    .er-badge.yes { color: #E53E3E; }
+    .er-badge.no  { color: #059669; }
+    .er-line { position: absolute; background-color: #94A3B8; z-index: 1; }
+    .er-arr-d { position: absolute; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 8px solid #94A3B8; z-index: 2; }
+    .er-arr-r { position: absolute; width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid #94A3B8; z-index: 2; }
+    .er-arr-u { position: absolute; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 8px solid #94A3B8; z-index: 2; }
+    .er-principles {
+      background: #FFFFFF; padding: 16px 24px;
+      border-left: 4px solid #1A1A2E;
+      margin: 0 20px 20px;
+      border-radius: 0 8px 8px 0;
+    }
+    .er-principles-title { font-weight: 700; color: #1A1A2E; margin-bottom: 8px; font-size: 15px; }
+    .er-principles-list { display: flex; gap: 28px; font-size: 13px; color: #333; flex-wrap: wrap; }
+    .er-principles-list span strong { color: #2563EB; }
 
     /* CODE BLOCK */
     .code-block {
@@ -169,11 +264,11 @@
     .code-lang { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--gray-dim); }
     .code-body { padding: 20px; overflow-x: auto; }
     .code-body pre { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #E2E8F0; line-height: 1.7; white-space: pre; }
-    .kw { color: #C792EA; } /* keyword */
-    .fn { color: #82AAFF; } /* function */
-    .str { color: #C3E88D; } /* string */
-    .num { color: #F78C6C; } /* number */
-    .cm { color: #546E7A; } /* comment */
+    .kw { color: #C792EA; }
+    .fn { color: #82AAFF; }
+    .str { color: #C3E88D; }
+    .num { color: #F78C6C; }
+    .cm { color: #546E7A; }
     .var { color: #EEFFFF; }
 
     /* DECISION TABLE */
@@ -192,17 +287,6 @@
     .batch-table tr:last-child td { border-bottom: none; }
     .batch-table .highlight-row td { color: var(--white); background: rgba(37,99,235,0.08); }
     .batch-table .highlight-row td:first-child { color: var(--blue-light); font-weight: 700; font-family: 'JetBrains Mono', monospace; }
-
-    /* ERROR TYPES */
-    .error-types { display: flex; flex-direction: column; gap: 12px; }
-    .error-type {
-      display: flex; gap: 16px; align-items: flex-start;
-      background: var(--navy-card); border: 1px solid var(--border);
-      border-radius: 10px; padding: 18px 20px;
-    }
-    .error-num { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; color: var(--blue-light); flex-shrink: 0; width: 32px; }
-    .error-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-    .error-desc { font-size: 13px; color: var(--gray); }
 
     /* RECOVERY STEPS */
     .recovery-steps { display: flex; flex-direction: column; gap: 16px; }
@@ -244,7 +328,7 @@
       background: var(--navy-card); border: 1px solid var(--border);
       border-radius: 12px; padding: 32px 24px; text-align: center;
     }
-    .result-num { font-size: 48px; font-weight: 900; line-height: 1; margin-bottom: 8px; }
+    .result-num { font-size: 40px; font-weight: 900; line-height: 1; margin-bottom: 8px; }
     .result-num .accent { color: var(--blue-light); }
     .result-label { font-size: 13px; color: var(--gray); line-height: 1.6; }
     .result-points { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -256,28 +340,6 @@
     .point-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue-light); flex-shrink: 0; margin-top: 6px; }
     .point-text { font-size: 14px; color: var(--gray); line-height: 1.6; }
     .point-text strong { color: var(--white); }
-
-    /* SLIDES */
-    .slides-section { padding: 80px 0; }
-    .slides-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .slide-thumb {
-      border-radius: 8px; overflow: hidden;
-      border: 1px solid var(--border); cursor: pointer;
-      transition: transform 0.2s, border-color 0.2s;
-    }
-    .slide-thumb:hover { transform: translateY(-3px); border-color: rgba(37,99,235,0.5); }
-    .slide-thumb img { width: 100%; display: block; }
-    .slide-label { padding: 8px 12px; background: var(--navy-card2); font-size: 12px; color: var(--gray-dim); }
-
-    /* LIGHTBOX */
-    .lightbox { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.93); align-items: center; justify-content: center; }
-    .lightbox.active { display: flex; }
-    .lightbox img { max-width: 90vw; max-height: 88vh; border-radius: 8px; }
-    .lb-close { position: fixed; top: 20px; right: 28px; color: var(--white); font-size: 36px; cursor: pointer; background: none; border: none; line-height: 1; }
-    .lb-nav { position: fixed; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); border: none; color: var(--white); font-size: 28px; cursor: pointer; padding: 12px 16px; border-radius: 8px; }
-    .lb-prev { left: 16px; }
-    .lb-next { right: 16px; }
-    .lb-counter { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--gray); }
 
     /* FOOTER */
     .page-footer { border-top: 1px solid var(--border); padding: 48px 24px; text-align: center; color: var(--gray-dim); font-size: 14px; }
@@ -291,7 +353,6 @@
       .actions-grid { grid-template-columns: 1fr; }
       .results-row { grid-template-columns: 1fr; }
       .result-points { grid-template-columns: 1fr; }
-      .slides-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -308,7 +369,7 @@
   <div class="hero-inner">
     <div class="hero-category">Data Engineering · API Integration · Python</div>
     <h1>한국 주소 데이터 전처리<br>자동화 파이프라인</h1>
-    <p class="hero-sub">80만 건의 비정형 주소 데이터를 Juso API와 6단계 자동화 파이프라인으로<br>단 하루 만에 100% 표준화한 데이터 엔지니어링 프로젝트</p>
+    <p class="hero-sub">80만 건의 비정형 주소 데이터를 Juso API와 6단계 자동화 파이프라인으로<br>5명이 5일 만에 100% 표준화한 데이터 엔지니어링 프로젝트</p>
     <div class="hero-tags">
       <span class="hero-tag">Python</span>
       <span class="hero-tag">Pandas</span>
@@ -328,8 +389,8 @@
         <div class="stat-label">전처리 정확도</div>
       </div>
       <div class="stat">
-        <div class="stat-num">160<span class="accent">일</span></div>
-        <div class="stat-label">→ 단 1일로 단축</div>
+        <div class="stat-num">160<span class="accent">일→5일</span></div>
+        <div class="stat-label">예상 기간 대비 실제 소요</div>
       </div>
       <div class="stat">
         <div class="stat-num">3,200<span class="accent">%</span></div>
@@ -433,119 +494,204 @@
     </div>
   </div>
 
-  <!-- 4. 파이프라인 구조 -->
+  <!-- 4. 파이프라인 아키텍처 -->
   <hr class="divider" style="margin-top:80px;" />
   <div class="sec-header">
     <div class="sec-eyebrow">// 04. Architecture</div>
-    <div class="sec-title">6단계 파이프라인: 원본 Excel에서 완성 데이터까지</div>
-    <div class="sec-desc">원본 Excel 파일에서 시작하여 완성 데이터까지 이어지는 6단계 파이프라인 전체 구조입니다.</div>
+    <div class="sec-title">6단계 파이프라인 전체 구조</div>
+    <div class="sec-desc">원본 Excel 파일에서 시작하여 완성 데이터까지 이어지는 6단계 파이프라인 전체 흐름입니다. 각 단계는 독립 스크립트로 구성되어 개별 실행 및 재시도가 가능합니다.</div>
   </div>
-  <div class="pipeline">
-    <div class="pipe-step">
-      <div class="pipe-left">
-        <div class="pipe-num">0</div>
-        <div class="pipe-line"></div>
-      </div>
-      <div class="pipe-right">
-        <div class="pipe-name">데이터 준비 — 원본 Excel → CSV 변환</div>
-        <div class="pipe-file">preprocessing.ipynb</div>
-        <div class="pipe-desc">원본 Excel 파일의 인코딩을 UTF-8로 변환하고, 필요한 컬럼을 검증하여 CSV 형식으로 저장합니다.</div>
-      </div>
-    </div>
-    <div class="pipe-step">
-      <div class="pipe-left">
-        <div class="pipe-num">1</div>
-        <div class="pipe-line"></div>
-      </div>
-      <div class="pipe-right">
-        <div class="pipe-name">데이터 분할 — 5,000건 단위 배치 생성</div>
-        <div class="pipe-file">data_splitting.py</div>
-        <div class="pipe-desc">80만 건의 데이터를 5,000건 단위로 분할합니다. 네트워크 불안정 시 최대 손실 범위를 관리 가능한 수준으로 제한하고, 중간 결과물 저장으로 진행 상황 추적이 용이합니다.</div>
-      </div>
-    </div>
-    <div class="pipe-step">
-      <div class="pipe-left">
-        <div class="pipe-num">2</div>
-        <div class="pipe-line"></div>
-      </div>
-      <div class="pipe-right">
-        <div class="pipe-name">1차 API 동기화 — Juso API 주소 변환</div>
-        <div class="pipe-file">sync_address.py</div>
-        <div class="pipe-desc">각 배치에 대해 Juso API를 호출하여 주소를 표준화합니다.</div>
-        <div class="pipe-branch">
-          <span class="branch-tag branch-success">✓ final_address_N.csv — 변환 성공</span>
-          <span class="branch-tag branch-fail">✗ error_address_N.csv — 변환 실패</span>
+
+  <!-- Pipeline Diagram -->
+  <div class="diagram-wrapper">
+    <div class="diagram-label">Architecture 1 — 6-Stage Pipeline</div>
+    <div class="diagram-scroll">
+      <div class="pipe-diagram">
+        <!-- Stage Labels -->
+        <div class="pd-stage" style="top:128px; left:110px; transform:translate(-50%,-50%);">Stage 0</div>
+        <div class="pd-stage" style="top:268px; left:110px; transform:translate(-50%,-50%);">Stage 1</div>
+        <div class="pd-stage" style="top:348px; left:258px; transform:translate(-50%,-50%);">Stage 2 (sync_address)</div>
+        <div class="pd-stage" style="top:280px; left:690px; transform:translate(-50%,-50%);">Stage 3 (sync_error)</div>
+        <div class="pd-stage" style="top:136px; left:730px; transform:translate(-50%,-50%);">Stage 4</div>
+        <div class="pd-stage" style="top:268px; left:1050px; transform:translate(-50%,-50%);">Stage 5</div>
+        <div class="pd-stage blue" style="top:208px; left:634px; transform:translate(-50%,-50%);">error_merge.py</div>
+
+        <!-- Col 1 Nodes -->
+        <div class="pd-node" style="top:20px; left:40px;">
+          <div class="ni">📊</div>
+          <div class="nt">원본 Excel 파일</div>
+          <div class="nd">preprocessing.ipynb</div>
         </div>
-      </div>
-    </div>
-    <div class="pipe-step">
-      <div class="pipe-left">
-        <div class="pipe-num">3</div>
-        <div class="pipe-line"></div>
-      </div>
-      <div class="pipe-right">
-        <div class="pipe-name">2차 에러 복구 — 수동 정제 후 재처리</div>
-        <div class="pipe-file">sync_error.py</div>
-        <div class="pipe-desc">1차 실패 데이터를 수동으로 정제(통/반·상세주소 제거)한 후 2차 API 처리를 수행합니다. 원본 인덱스를 보존하여 정확한 위치에 결과를 병합합니다.</div>
-        <div class="pipe-branch">
-          <span class="branch-tag branch-success">✓ post_final_N.csv — 복구 성공</span>
-          <span class="branch-tag branch-fail">✗ post_error_N.csv — 최종 실패</span>
+        <div class="pd-node" style="top:158px; left:40px;">
+          <div class="ni">📄</div>
+          <div class="nt">CSV 파일</div>
+          <div class="nd">인코딩 변환 / 컬럼 검증</div>
         </div>
+        <div class="pd-node" style="top:298px; left:40px;">
+          <div class="ni">📦</div>
+          <div class="nt">배치 CSV들</div>
+          <div class="nd">5,000건 단위 분할</div>
+        </div>
+
+        <!-- Col 2 Nodes -->
+        <div class="pd-node success" style="top:158px; left:360px;">
+          <div class="ni">✅</div>
+          <div class="nt" style="color:#047857;">final_address_N.csv</div>
+          <div class="nd">1차 변환 성공</div>
+        </div>
+        <div class="pd-node error" style="top:298px; left:360px;">
+          <div class="ni">❌</div>
+          <div class="nt" style="color:#B91C1C;">error_address_N.csv</div>
+          <div class="nd">1차 변환 실패</div>
+        </div>
+
+        <!-- Col 3 Nodes -->
+        <div class="pd-node success" style="top:138px; left:640px;">
+          <div class="ni">✅</div>
+          <div class="nt" style="color:#047857;">post_final_N.csv</div>
+          <div class="nd">복구 성공</div>
+        </div>
+        <div class="pd-node manual" style="top:298px; left:640px;">
+          <div class="ni">✏️</div>
+          <div class="nt" style="color:#B45309;">수동 주소 정제</div>
+          <div class="nd">통/반·상세주소 제거</div>
+        </div>
+        <div class="pd-node error" style="top:430px; left:640px;">
+          <div class="ni">❌</div>
+          <div class="nt" style="color:#B91C1C;">post_error_N.csv</div>
+          <div class="nd">최종 실패</div>
+        </div>
+
+        <!-- Col 4 Nodes -->
+        <div class="pd-node" style="top:158px; left:930px;">
+          <div class="ni">🗂️</div>
+          <div class="nt">final_merged_output.xlsx</div>
+          <div class="nd">전체 배치 통합</div>
+        </div>
+        <div class="pd-node final" style="top:298px; left:930px;">
+          <div class="ni">🎯</div>
+          <div class="nt">완성 데이터</div>
+          <div class="nd">전처리 정확도 100%</div>
+        </div>
+
+        <!-- Lines: Col1 vertical -->
+        <div class="pd-line" style="top:118px; left:144px; width:2px; height:32px;"></div>
+        <div class="pd-arr-d" style="top:150px; left:140px;"></div>
+        <div class="pd-line" style="top:258px; left:144px; width:2px; height:32px;"></div>
+        <div class="pd-arr-d" style="top:290px; left:140px;"></div>
+
+        <!-- Batch trunk right + split -->
+        <div class="pd-line" style="top:348px; left:250px; height:2px; width:50px;"></div>
+        <div class="pd-line" style="top:208px; left:299px; width:2px; height:141px;"></div>
+        <div class="pd-line" style="top:207px; left:300px; height:2px; width:52px;"></div>
+        <div class="pd-arr-r" style="top:203px; left:352px;"></div>
+        <div class="pd-line" style="top:348px; left:300px; height:2px; width:52px;"></div>
+        <div class="pd-arr-r" style="top:344px; left:352px;"></div>
+
+        <!-- Error1 -> Manual -->
+        <div class="pd-line" style="top:348px; left:570px; height:2px; width:62px;"></div>
+        <div class="pd-arr-r" style="top:344px; left:632px;"></div>
+
+        <!-- Manual -> Final2 (up) -->
+        <div class="pd-line" style="top:258px; left:744px; width:2px; height:32px;"></div>
+        <div class="pd-arr-u" style="top:250px; left:740px;"></div>
+
+        <!-- Manual -> Error2 (down) -->
+        <div class="pd-line" style="top:398px; left:744px; width:2px; height:24px;"></div>
+        <div class="pd-arr-d" style="top:422px; left:740px;"></div>
+
+        <!-- Final2 -> Final1 (left, merge) -->
+        <div class="pd-line" style="top:207px; left:570px; height:2px; width:62px;"></div>
+        <div class="pd-arr-l" style="top:203px; left:562px;"></div>
+
+        <!-- Final1 -> Merged (over top) -->
+        <div class="pd-line" style="top:138px; left:484px; width:2px; height:20px;"></div>
+        <div class="pd-line" style="top:137px; left:485px; height:2px; width:555px;"></div>
+        <div class="pd-line" style="top:138px; left:1039px; width:2px; height:20px;"></div>
+        <div class="pd-arr-d" style="top:150px; left:1035px;"></div>
+
+        <!-- Merged -> Final Data -->
+        <div class="pd-line" style="top:258px; left:1034px; width:2px; height:32px;"></div>
+        <div class="pd-arr-d" style="top:290px; left:1030px;"></div>
       </div>
     </div>
-    <div class="pipe-step">
-      <div class="pipe-left">
-        <div class="pipe-num">4</div>
-        <div class="pipe-line"></div>
+  </div>
+
+  <!-- Pipeline text steps -->
+  <div style="display:flex; flex-direction:column; gap:0; margin-top:8px;">
+    <div style="display:flex; gap:0; position:relative;">
+      <div style="display:flex; flex-direction:column; align-items:center; width:56px; flex-shrink:0;">
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--blue); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; z-index:1;">0</div>
+        <div style="width:2px; flex:1; background:var(--border); min-height:20px;"></div>
       </div>
-      <div class="pipe-right">
-        <div class="pipe-name">최종 병합 — 전체 배치 통합</div>
-        <div class="pipe-file">merge.py &amp; error_merge.py</div>
-        <div class="pipe-desc">복구 성공 데이터를 <code style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--blue-light);">pd.isna()</code> 체크로 선택적 업데이트하여 기존 성공 데이터를 보호하고, 전체 배치를 <code style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--blue-light);">final_merged_output.xlsx</code>로 통합합니다.</div>
+      <div style="flex:1; padding:0 0 28px 16px;">
+        <div style="font-size:16px; font-weight:700; padding-top:8px; margin-bottom:4px;">데이터 준비 — 원본 Excel → CSV 변환</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--blue-light); background:rgba(37,99,235,0.12); border:1px solid rgba(37,99,235,0.25); padding:2px 10px; border-radius:4px; display:inline-block; margin-bottom:8px;">preprocessing.ipynb</div>
+        <div style="font-size:14px; color:var(--gray);">원본 Excel 파일의 인코딩을 UTF-8로 변환하고, 필요한 컬럼을 검증하여 CSV 형식으로 저장합니다.</div>
       </div>
     </div>
-    <div class="pipe-step">
-      <div class="pipe-left">
-        <div class="pipe-num">5</div>
-        <div class="pipe-line"></div>
+    <div style="display:flex; gap:0; position:relative;">
+      <div style="display:flex; flex-direction:column; align-items:center; width:56px; flex-shrink:0;">
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--blue); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; z-index:1;">1</div>
+        <div style="width:2px; flex:1; background:var(--border); min-height:20px;"></div>
       </div>
-      <div class="pipe-right">
-        <div class="pipe-name">수동 검토 — 최종 잔여 에러 처리</div>
-        <div class="pipe-file">주소정보누리집 활용</div>
-        <div class="pipe-desc">자동화 이후에도 남은 NaN 값(폐지된 주소 등)을 주소정보누리집에서 수동으로 검색하여 100% 정확도를 달성합니다. "폐지된 주소 정보 포함" 옵션을 활용합니다.</div>
+      <div style="flex:1; padding:0 0 28px 16px;">
+        <div style="font-size:16px; font-weight:700; padding-top:8px; margin-bottom:4px;">데이터 분할 — 5,000건 단위 배치 생성</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--blue-light); background:rgba(37,99,235,0.12); border:1px solid rgba(37,99,235,0.25); padding:2px 10px; border-radius:4px; display:inline-block; margin-bottom:8px;">data_splitting.py</div>
+        <div style="font-size:14px; color:var(--gray);">80만 건의 데이터를 5,000건 단위로 분할합니다. 네트워크 불안정 시 최대 손실 범위를 관리 가능한 수준으로 제한하고, 중간 결과물 저장으로 진행 상황 추적이 용이합니다.</div>
+      </div>
+    </div>
+    <div style="display:flex; gap:0; position:relative;">
+      <div style="display:flex; flex-direction:column; align-items:center; width:56px; flex-shrink:0;">
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--blue); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; z-index:1;">2</div>
+        <div style="width:2px; flex:1; background:var(--border); min-height:20px;"></div>
+      </div>
+      <div style="flex:1; padding:0 0 28px 16px;">
+        <div style="font-size:16px; font-weight:700; padding-top:8px; margin-bottom:4px;">1차 API 동기화 — Juso API 주소 변환</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--blue-light); background:rgba(37,99,235,0.12); border:1px solid rgba(37,99,235,0.25); padding:2px 10px; border-radius:4px; display:inline-block; margin-bottom:8px;">sync_address.py</div>
+        <div style="font-size:14px; color:var(--gray);">각 배치에 대해 Juso API를 호출하여 주소를 표준화합니다. 성공: <code style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--green);">final_address_N.csv</code> / 실패: <code style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--red);">error_address_N.csv</code></div>
+      </div>
+    </div>
+    <div style="display:flex; gap:0; position:relative;">
+      <div style="display:flex; flex-direction:column; align-items:center; width:56px; flex-shrink:0;">
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--blue); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; z-index:1;">3</div>
+        <div style="width:2px; flex:1; background:var(--border); min-height:20px;"></div>
+      </div>
+      <div style="flex:1; padding:0 0 28px 16px;">
+        <div style="font-size:16px; font-weight:700; padding-top:8px; margin-bottom:4px;">2차 에러 복구 — 수동 정제 후 재처리</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--blue-light); background:rgba(37,99,235,0.12); border:1px solid rgba(37,99,235,0.25); padding:2px 10px; border-radius:4px; display:inline-block; margin-bottom:8px;">sync_error.py</div>
+        <div style="font-size:14px; color:var(--gray);">1차 실패 데이터를 수동으로 정제(통/반·상세주소 제거)한 후 2차 API 처리를 수행합니다. 원본 인덱스를 보존하여 정확한 위치에 결과를 병합합니다.</div>
+      </div>
+    </div>
+    <div style="display:flex; gap:0; position:relative;">
+      <div style="display:flex; flex-direction:column; align-items:center; width:56px; flex-shrink:0;">
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--blue); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; z-index:1;">4</div>
+        <div style="width:2px; flex:1; background:var(--border); min-height:20px;"></div>
+      </div>
+      <div style="flex:1; padding:0 0 28px 16px;">
+        <div style="font-size:16px; font-weight:700; padding-top:8px; margin-bottom:4px;">최종 병합 — 전체 배치 통합</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--blue-light); background:rgba(37,99,235,0.12); border:1px solid rgba(37,99,235,0.25); padding:2px 10px; border-radius:4px; display:inline-block; margin-bottom:8px;">merge.py &amp; error_merge.py</div>
+        <div style="font-size:14px; color:var(--gray);"><code style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--blue-light);">pd.isna()</code> 체크로 선택적 업데이트하여 기존 성공 데이터를 보호하고, 전체 배치를 <code style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--blue-light);">final_merged_output.xlsx</code>로 통합합니다.</div>
+      </div>
+    </div>
+    <div style="display:flex; gap:0; position:relative;">
+      <div style="display:flex; flex-direction:column; align-items:center; width:56px; flex-shrink:0;">
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--blue); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; z-index:1;">5</div>
+      </div>
+      <div style="flex:1; padding:0 0 0 16px;">
+        <div style="font-size:16px; font-weight:700; padding-top:8px; margin-bottom:4px;">수동 검토 — 최종 잔여 에러 처리</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--blue-light); background:rgba(37,99,235,0.12); border:1px solid rgba(37,99,235,0.25); padding:2px 10px; border-radius:4px; display:inline-block; margin-bottom:8px;">주소정보누리집 활용</div>
+        <div style="font-size:14px; color:var(--gray);">자동화 이후에도 남은 NaN 값(폐지된 주소 등)을 주소정보누리집에서 수동으로 검색하여 100% 정확도를 달성합니다.</div>
       </div>
     </div>
   </div>
 
   <!-- 5. API 재시도 로직 -->
-  <hr class="divider" style="margin-top:40px;" />
+  <hr class="divider" style="margin-top:80px;" />
   <div class="sec-header">
     <div class="sec-eyebrow">// 05. Technical Detail</div>
     <div class="sec-title">지능형 API 재시도 로직: 3단계 에러 분류로 안정성 확보</div>
     <div class="sec-desc">단순 재시도가 아닌, 에러 유형을 3단계로 분류하여 각각에 맞는 처리 전략을 적용했습니다.</div>
-  </div>
-  <div class="error-types" style="margin-bottom:28px;">
-    <div class="error-type">
-      <div class="error-num">01</div>
-      <div>
-        <div class="error-title">HTTP 에러</div>
-        <div class="error-desc">서버 연결 실패, 500 에러 등 네트워크 레벨 오류 → 3초 대기 후 최대 3회 재시도</div>
-      </div>
-    </div>
-    <div class="error-type">
-      <div class="error-num">02</div>
-      <div>
-        <div class="error-title">API 에러</div>
-        <div class="error-desc">유효하지 않은 주소, 검색 결과 없음 (errorCode ≠ "0") → 에러 로깅 후 재시도</div>
-      </div>
-    </div>
-    <div class="error-type">
-      <div class="error-num">03</div>
-      <div>
-        <div class="error-title">네트워크 에러</div>
-        <div class="error-desc">RequestException 발생 (타임아웃, 연결 끊김 등) → 에러 로깅 후 재시도</div>
-      </div>
-    </div>
   </div>
   <div class="code-block">
     <div class="code-header"><span class="code-lang">python · call_juso_api()</span></div>
@@ -581,7 +727,8 @@
     </div>
     <div class="decision-item">
       <div class="decision-key">timeout=50</div>
-      <div class="decision-val">대용량 요청 시 응답 지연 고려. 50초 이상 무응답 시 에러로 처리.</div>
+      <div class="decision-val">대용량 요청 시 응답 지연 고려. 50초 이상 무응답 시 에러로
+ 처리.</div>
     </div>
     <div class="decision-item">
       <div class="decision-key">hstryYn="Y"</div>
@@ -633,35 +780,152 @@
   <div class="sec-header">
     <div class="sec-eyebrow">// 07. Error Recovery</div>
     <div class="sec-title">2단계 에러 복구 시스템: 자동+수동 조합으로 100% 달성</div>
-    <div class="sec-desc">자동화만으로 처리 불가능한 케이스를 수동 정제와 조합하여 최종 100% 정확도를 달성했습니다.</div>
+    <div class="sec-desc">자동화만으로 처리 불가능한 케이스를 수동 정제와 조합하여 최종 100% 정확도를 달성했습니다. 아래 다이어그램은 에러 복구 전체 흐름을 나타냅니다.</div>
   </div>
-  <div class="recovery-steps">
+
+  <!-- Error Recovery Diagram -->
+  <div class="diagram-wrapper">
+    <div class="diagram-label">Architecture 2 — 2-Stage Error Recovery System</div>
+    <div class="diagram-scroll">
+      <div class="er-diagram">
+        <!-- Labels -->
+        <div class="er-stage blue" style="top:88px; left:490px; transform:translate(-50%,-50%);">error_merge.py<br><span style="font-size:10px; font-weight:400;">NaN 선택적 업데이트</span></div>
+        <div class="er-badge ok" style="top:30px; left:330px;">성공</div>
+        <div class="er-badge ng" style="top:98px; left:161px;">실패</div>
+        <div class="er-badge ok" style="top:205px; left:496px;">성공</div>
+        <div class="er-badge ng" style="top:315px; left:496px;">실패</div>
+        <div class="er-badge yn yes" style="top:215px; left:816px;">Yes (미변환 잔여 데이터)</div>
+        <div class="er-badge yn no"  style="top:138px; left:917px; transform:translateX(-50%);">No (100% 변환 완료)</div>
+
+        <!-- Col 1 -->
+        <div class="er-node" style="top:14px; left:60px;">
+          <div class="nt">Stage 2: sync_address.py</div>
+          <div class="nd">1차 API 처리</div>
+        </div>
+        <div class="er-node error" style="top:118px; left:60px;">
+          <div class="nt" style="color:#B91C1C;">error_address_N.csv</div>
+        </div>
+        <div class="er-node manual" style="top:222px; left:60px;">
+          <div class="ni">✏️</div>
+          <div class="nt" style="color:#B45309;">수동 주소 정제</div>
+          <div class="nd">통/반, 상세주소, 호수 제거</div>
+        </div>
+
+        <!-- Col 2 -->
+        <div class="er-node success" style="top:14px; left:370px;">
+          <div class="nt" style="color:#047857;">final_address_N.csv</div>
+        </div>
+        <div class="er-node success" style="top:118px; left:370px;">
+          <div class="nt" style="color:#047857;">post_final_N.csv</div>
+          <div class="nd">복구 성공</div>
+        </div>
+        <div class="er-node" style="top:222px; left:370px;">
+          <div class="nt">Stage 3: sync_error.py</div>
+          <div class="nd">2차 API 처리</div>
+        </div>
+        <div class="er-node error" style="top:330px; left:370px;">
+          <div class="nt" style="color:#B91C1C;">post_error_N.csv</div>
+          <div class="nd">최종 실패</div>
+        </div>
+
+        <!-- Col 3 -->
+        <div class="er-node" style="top:14px; left:690px;">
+          <div class="nt">Stage 4</div>
+          <div class="nd">final_merged_output.xlsx</div>
+        </div>
+        <div class="er-node decision" style="top:104px; left:755px;">
+          <div class="inner" style="width:70px;">빈칸(NaN)<br>존재?</div>
+        </div>
+        <div class="er-node" style="top:222px; left:690px;">
+          <div class="nt">Stage 5: 수동 검토</div>
+          <div class="nd">주소정보누리집 검색<br>(폐지된 주소 포함 옵션)</div>
+        </div>
+
+        <!-- Col 4 -->
+        <div class="er-node final" style="top:118px; left:970px;">
+          <div class="ni">✅</div>
+          <div class="nt">완성 데이터</div>
+        </div>
+
+        <!-- Lines -->
+        <!-- Stage2 -> Final1 -->
+        <div class="er-line" style="top:39px; left:270px; width:100px; height:2px;"></div>
+        <div class="er-arr-r" style="top:35px; left:370px;"></div>
+        <!-- Stage2 -> Error1 -->
+        <div class="er-line" style="top:70px; left:164px; height:48px; width:2px;"></div>
+        <div class="er-arr-d" style="top:118px; left:160px;"></div>
+        <!-- Error1 -> Manual -->
+        <div class="er-line" style="top:162px; left:164px; height:60px; width:2px;"></div>
+        <div class="er-arr-d" style="top:222px; left:160px;"></div>
+        <!-- Manual -> Stage3 -->
+        <div class="er-line" style="top:258px; left:270px; width:100px; height:2px;"></div>
+        <div class="er-arr-r" style="top:254px; left:370px;"></div>
+        <!-- Stage3 -> Final2 (up) -->
+        <div class="er-line" style="top:166px; left:474px; height:56px; width:2px;"></div>
+        <div class="er-arr-u" style="top:158px; left:470px;"></div>
+        <!-- Stage3 -> Error2 (down) -->
+        <div class="er-line" style="top:278px; left:474px; height:52px; width:2px;"></div>
+        <div class="er-arr-d" style="top:330px; left:470px;"></div>
+        <!-- Final2 -> Final1 (merge, up) -->
+        <div class="er-line" style="top:52px; left:474px; height:66px; width:2px;"></div>
+        <div class="er-arr-u" style="top:44px; left:470px;"></div>
+        <!-- Final1 -> Stage4 -->
+        <div class="er-line" style="top:39px; left:580px; width:110px; height:2px;"></div>
+        <div class="er-arr-r" style="top:35px; left:690px;"></div>
+        <!-- Stage4 -> Decision -->
+        <div class="er-line" style="top:70px; left:794px; height:34px; width:2px;"></div>
+        <div class="er-arr-d" style="top:104px; left:790px;"></div>
+        <!-- Decision -> Stage5 (Yes, down) -->
+        <div class="er-line" style="top:192px; left:794px; height:30px; width:2px;"></div>
+        <div class="er-arr-d" style="top:222px; left:790px;"></div>
+        <!-- Decision -> Final (No, right) -->
+        <div class="er-line" style="top:148px; left:843px; width:127px; height:2px;"></div>
+        <div class="er-arr-r" style="top:144px; left:970px;"></div>
+        <!-- Stage5 -> Final (around) -->
+        <div class="er-line" style="top:178px; left:1079px; height:80px; width:2px;"></div>
+        <div class="er-line" style="top:258px; left:910px; width:170px; height:2px;"></div>
+        <div class="er-arr-u" style="top:170px; left:1075px;"></div>
+      </div>
+    </div>
+    <div style="padding:0 20px 20px;">
+      <div class="er-principles">
+        <div class="er-principles-title">설계 핵심 원칙</div>
+        <div class="er-principles-list">
+          <span><strong>1. pd.isna() 체크</strong> → 이미 성공한 데이터 덮어쓰기 방지</span>
+          <span><strong>2. 원본 인덱스 보존</strong> → 배치 분할 이후에도 정확한 위치에 결과 병합</span>
+          <span><strong>3. 자동+수동 조합</strong> → 100% 정확도 달성</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="recovery-steps" style="margin-top:8px;">
     <div class="recovery-step">
       <div class="step-badge">Stage 2</div>
       <div>
         <div class="step-info-title">1차 API 처리 — sync_address.py</div>
-        <div class="step-info-desc">전체 배치에 대해 Juso API를 호출합니다. 성공 결과는 <code style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--blue-light);">final_address_N.csv</code>로, 실패 결과는 <code style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--red);">error_address_N.csv</code>로 분리 저장됩니다.</div>
+        <div class="step-info-desc">전체 배치에 대해 Juso API를 호출합니다. 성공 결과는 <code style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--green);">final_address_N.csv</code>로, 실패 결과는 <code style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--red);">error_address_N.csv</code>로 분리 저장됩니다.</div>
       </div>
     </div>
     <div class="recovery-step">
       <div class="step-badge" style="background:var(--yellow); color:var(--navy);">수동</div>
       <div>
         <div class="step-info-title">수동 주소 정제 — 통/반·상세주소 제거</div>
-        <div class="step-info-desc">에러 파일을 열어 API 실패 원인을 분석하고, 상세주소·통/반 정보 등 불필요한 텍스트를 제거합니다. 이 과정에서 실패 유형을 파악하여 재처리 가능 여부를 판단합니다.</div>
+        <div class="step-info-desc">에러 파일을 열어 API 실패 원인을 분석하고, 상세주소·통/반 정보 등 불필요한 텍스트를 제거합니다.</div>
       </div>
     </div>
     <div class="recovery-step">
       <div class="step-badge">Stage 3</div>
       <div>
         <div class="step-info-title">2차 API 처리 — sync_error.py</div>
-        <div class="step-info-desc">수동 정제된 주소로 2차 API 처리를 수행합니다. <strong>원본 Index 컬럼을 보존</strong>하여 최종 병합 시 정확한 위치에 결과를 삽입합니다. 성공: <code style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--green);">post_final_N.csv</code> / 실패: <code style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--red);">post_error_N.csv</code></div>
+        <div class="step-info-desc">수동 정제된 주소로 2차 API 처리를 수행합니다. <strong>원본 Index 컬럼을 보존</strong>하여 최종 병합 시 정확한 위치에 결과를 삽입합니다.</div>
       </div>
     </div>
     <div class="recovery-step">
       <div class="step-badge" style="background:#334155;">병합</div>
       <div>
         <div class="step-info-title">NaN 선택적 업데이트 — error_merge.py</div>
-        <div class="step-info-desc"><code style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--blue-light);">pd.isna()</code> 체크로 이미 성공한 데이터는 보호하고, NaN 값인 경우에만 복구 결과로 업데이트합니다. 인덱스 기반 정확한 위치 매칭으로 데이터 일관성을 유지합니다.</div>
+        <div class="step-info-desc"><code style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--blue-light);">pd.isna()</code> 체크로 이미 성공한 데이터는 보호하고, NaN 값인 경우에만 복구 결과로 업데이트합니다.</div>
       </div>
     </div>
     <div class="recovery-step">
@@ -671,18 +935,6 @@
         <div class="step-info-desc">통합 후에도 남은 NaN 값을 확인합니다. 폐지된 주소는 주소정보누리집에서 "폐지된 주소 정보 포함" 옵션으로 검색하여 수동 입력합니다. 이 단계를 통해 최종 100% 정확도를 달성합니다.</div>
       </div>
     </div>
-  </div>
-  <div style="margin-top:24px;">
-    <table class="compare-table">
-      <thead>
-        <tr><th>항목</th><th>sync_address.py</th><th>sync_error.py</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>입력 컬럼</td><td>n_addr (전처리 전 원본 주소)</td><td>주소 (수동 정제된 주소)</td></tr>
-        <tr><td>인덱스 처리</td><td>순차 인덱스 생성</td><td>원본 Index 컬럼 보존</td></tr>
-        <tr><td>출력 구조</td><td>index, 시/도, 시/군/구, 읍/면/동</td><td>Index, 시/도, 시/군/구, 읍/면/동</td></tr>
-      </tbody>
-    </table>
   </div>
 
   <!-- 8. 실행 액션 -->
@@ -718,8 +970,8 @@
       <ul class="action-items">
         <li>파이프라인 구조 문서화</li>
         <li>실행 순서 및 주의사항 가이드 작성</li>
+        <li>5명 팀원과 역할 분담하여 5일 완수</li>
         <li>재사용 가능한 모듈 구조로 정리</li>
-        <li>향후 유사 작업 즉시 적용 가능</li>
       </ul>
     </div>
   </div>
@@ -736,8 +988,8 @@
       <div class="result-label">일일 처리량 향상<br>5,000건 → 160,000건+</div>
     </div>
     <div class="result-card">
-      <div class="result-num">160<span class="accent">일→1일</span></div>
-      <div class="result-label">예상 소요 기간 단축<br>마감 기한 내 완수</div>
+      <div class="result-num">160<span class="accent">일→5일</span></div>
+      <div class="result-label">수동 예상 기간 대비<br>5명이 5일 만에 완수</div>
     </div>
     <div class="result-card">
       <div class="result-num">100<span class="accent">%</span></div>
@@ -767,27 +1019,6 @@
     </div>
   </div>
 
-  <!-- 10. 슬라이드 -->
-  <hr class="divider" style="margin-top:80px;" />
-  <div class="sec-header">
-    <div class="sec-eyebrow">// Slides</div>
-    <div class="sec-title">포트폴리오 슬라이드</div>
-    <div class="sec-desc">이미지를 클릭하면 크게 볼 수 있습니다. 키보드 방향키로 이동 가능합니다.</div>
-  </div>
-  <div class="slides-grid">
-    <div class="slide-thumb" onclick="openLb(0)"><img src="./images/slide-01.png" alt="Slide 1" loading="lazy" /><div class="slide-label">01 — 프로젝트 개요</div></div>
-    <div class="slide-thumb" onclick="openLb(1)"><img src="./images/slide-02.png" alt="Slide 2" loading="lazy" /><div class="slide-label">02 — 문제 상황</div></div>
-    <div class="slide-thumb" onclick="openLb(2)"><img src="./images/slide-03.png" alt="Slide 3" loading="lazy" /><div class="slide-label">03 — Juso API 분석</div></div>
-    <div class="slide-thumb" onclick="openLb(3)"><img src="./images/slide-04.png" alt="Slide 4" loading="lazy" /><div class="slide-label">04 — 기술 스택</div></div>
-    <div class="slide-thumb" onclick="openLb(4)"><img src="./images/slide-05.png" alt="Slide 5" loading="lazy" /><div class="slide-label">05 — 6단계 파이프라인</div></div>
-    <div class="slide-thumb" onclick="openLb(5)"><img src="./images/slide-06.png" alt="Slide 6" loading="lazy" /><div class="slide-label">06 — API 재시도 로직</div></div>
-    <div class="slide-thumb" onclick="openLb(6)"><img src="./images/slide-07.png" alt="Slide 7" loading="lazy" /><div class="slide-label">07 — 배치 전략</div></div>
-    <div class="slide-thumb" onclick="openLb(7)"><img src="./images/slide-08.png" alt="Slide 8" loading="lazy" /><div class="slide-label">08 — 에러 복구 아키텍처</div></div>
-    <div class="slide-thumb" onclick="openLb(8)"><img src="./images/slide-09.png" alt="Slide 9" loading="lazy" /><div class="slide-label">09 — 에러 복구 상세</div></div>
-    <div class="slide-thumb" onclick="openLb(9)"><img src="./images/slide-10.png" alt="Slide 10" loading="lazy" /><div class="slide-label">10 — 실행 액션</div></div>
-    <div class="slide-thumb" onclick="openLb(10)"><img src="./images/slide-11.png" alt="Slide 11" loading="lazy" /><div class="slide-label">11 — 성과</div></div>
-  </div>
-
   <div style="height:80px;"></div>
 </div>
 
@@ -795,41 +1026,5 @@
   <p><a href="../">← 포트폴리오 목록으로</a> &nbsp;·&nbsp; © 2024 dohunhyeong &nbsp;·&nbsp; <a href="https://github.com/dohunhyeong/portfolio" target="_blank">GitHub</a></p>
 </div>
 
-<!-- LIGHTBOX -->
-<div class="lightbox" id="lb" onclick="closeLbBg(event)">
-  <button class="lb-close" onclick="closeLb()">×</button>
-  <button class="lb-nav lb-prev" onclick="changeLb(-1)">&#8249;</button>
-  <img id="lbImg" src="" alt="" />
-  <button class="lb-nav lb-next" onclick="changeLb(1)">&#8250;</button>
-  <div class="lb-counter" id="lbCounter"></div>
-</div>
-
-<script>
-  const imgs = Array.from({length:11}, (_,i) => `./images/slide-${String(i+1).padStart(2,'0')}.png`);
-  let cur = 0;
-  function openLb(i) {
-    cur = i;
-    document.getElementById('lbImg').src = imgs[i];
-    document.getElementById('lbCounter').textContent = `${i+1} / ${imgs.length}`;
-    document.getElementById('lb').classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeLb() {
-    document.getElementById('lb').classList.remove('active');
-    document.body.style.overflow = '';
-  }
-  function closeLbBg(e) { if (e.target === document.getElementById('lb')) closeLb(); }
-  function changeLb(d) {
-    cur = (cur + d + imgs.length) % imgs.length;
-    document.getElementById('lbImg').src = imgs[cur];
-    document.getElementById('lbCounter').textContent = `${cur+1} / ${imgs.length}`;
-  }
-  document.addEventListener('keydown', e => {
-    if (!document.getElementById('lb').classList.contains('active')) return;
-    if (e.key === 'ArrowRight') changeLb(1);
-    if (e.key === 'ArrowLeft') changeLb(-1);
-    if (e.key === 'Escape') closeLb();
-  });
-</script>
 </body>
 </html>
