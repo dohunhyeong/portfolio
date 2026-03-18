@@ -562,7 +562,7 @@
   <line x1="370" y1="379" x2="450" y2="379" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
   <!-- 성공/실패 라벨 (화살표 선 위에 배치, 노드 위) -->
   <text x="410" y="196" text-anchor="middle" fill="#059669" font-size="13" font-weight="700">성공</text>
-  <text x="410" y="326" text-anchor="middle" fill="#E53E3E" font-size="13" font-weight="700">실패</text>
+  <text x="410" y="406" text-anchor="middle" fill="#E53E3E" font-size="13" font-weight="700">실패</text>
 
   <!-- ===== COL 2: final_address / error_address (x=450~680) ===== -->
   <!-- final_address 노드 -->
@@ -611,14 +611,15 @@
   <text x="865" y="538" text-anchor="middle" fill="#B91C1C" font-size="15" font-weight="700">post_error_N.csv</text>
   <text x="865" y="558" text-anchor="middle" fill="#64748B" font-size="12">최종 실패</text>
 
-  <!-- ===== error_merge.py 병합 (final_address → post_final) ===== -->
+  <!-- =====  <!-- error_merge.py 병합 (final_address → post_final) -->
   <!-- final_address 오른쪽 → error_merge → post_final 왼쪽 -->
-  <line x1="660" y1="249" x2="720" y2="249" stroke="#2563EB" stroke-width="2"/>
-  <line x1="720" y1="249" x2="760" y2="249" stroke="#2563EB" stroke-width="2" marker-end="url(#arr-blue)"/>
-  <!-- error_merge 라벨 -->
-  <rect x="680" y="228" width="80" height="40" rx="6" fill="#2563EB"/>
-  <text x="720" y="245" text-anchor="middle" fill="white" font-size="12" font-weight="700">error_merge</text>
-  <text x="720" y="261" text-anchor="middle" fill="#BFDBFE" font-size="11">.py</text>
+  <line x1="660" y1="249" x2="760" y2="249" stroke="#2563EB" stroke-width="2" marker-end="url(#arr-blue)"/>
+  <!-- error_merge 라벨 (두 노드 사이 화살표 선 중간, 노드 위에 배치) -->
+  <rect x="678" y="168" width="86" height="40" rx="6" fill="#2563EB"/>
+  <text x="721" y="185" text-anchor="middle" fill="white" font-size="12" font-weight="700">error_merge</text>
+  <text x="721" y="201" text-anchor="middle" fill="#BFDBFE" font-size="11">.py</text>
+  <!-- 라벨에서 화살표 선으로 연결하는 작은 수직선 -->
+  <line x1="721" y1="208" x2="721" y2="249" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="3,2"/>
 
   <!-- ===== post_final → final_merged (위쪽 경로) ===== -->
   <line x1="970" y1="249" x2="1060" y2="249" stroke="#94A3B8" stroke-width="2"/>
