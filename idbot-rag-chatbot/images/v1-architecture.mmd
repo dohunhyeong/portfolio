@@ -1,0 +1,17 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e3a5f', 'primaryTextColor': '#f8fafc', 'primaryBorderColor': '#2563eb', 'lineColor': '#60a5fa', 'secondaryColor': '#0d1f3c', 'tertiaryColor': '#1e293b', 'background': '#0f172a', 'mainBkg': '#1e293b', 'nodeBorder': '#2563eb', 'clusterBkg': '#0d1f3c', 'titleColor': '#f8fafc', 'edgeLabelBackground': '#1e293b', 'attributeBackgroundColorEven': '#1e293b', 'attributeBackgroundColorOdd': '#0d1f3c'}}}%%
+flowchart LR
+    A["🙋 사용자 질문"] --> B["OpenAI Embedding\ntext-embedding-3-small"]
+    B --> C["FAISS\n벡터 검색"]
+    C --> D["관련 문서 Top-K"]
+    D --> E["OpenAI GPT\n답변 생성"]
+    E --> F["✅ 답변 + 출처 URL"]
+
+    G["📄 1,440 HTML 문서\nNetlify 호스팅"] --> H["WebBaseLoader\n문서 파싱"]
+    H --> I["Embedding\n벡터화"]
+    I --> C
+
+    style A fill:#1e3a5f,stroke:#2563eb,color:#f8fafc
+    style F fill:#1e3a5f,stroke:#2563eb,color:#f8fafc
+    style G fill:#0d1f3c,stroke:#475569,color:#94a3b8
+    style C fill:#2563eb,stroke:#1d4ed8,color:#f8fafc
+    style E fill:#1e3a5f,stroke:#2563eb,color:#f8fafc

@@ -1,0 +1,36 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e3a5f', 'primaryTextColor': '#f8fafc', 'primaryBorderColor': '#2563eb', 'lineColor': '#60a5fa', 'secondaryColor': '#0d1f3c', 'tertiaryColor': '#1e293b', 'background': '#0f172a', 'mainBkg': '#1e293b', 'nodeBorder': '#2563eb', 'clusterBkg': '#0d1f3c', 'titleColor': '#f8fafc', 'edgeLabelBackground': '#1e293b'}}}%%
+flowchart TD
+    User["🙋 사용자 질문"] --> API["FastAPI /query"]
+
+    subgraph PRE["⚙️ Pre-Retrieval"]
+        direction TB
+        Intent["IntentService\n질문 유형 분류"]
+        Norm["NormalizationService\n동의어 정규화 + 급수 설정"]
+        Grade["GradeService\n급수 질문 감지"]
+        Route["RoutingService\n검색 대상 Vector Store 결정"]
+        Intent --> Norm --> Grade --> Route
+    end
+
+    subgraph RET["🔍 Retrieval"]
+        direction TB
+        Loader["RetrieverLoader\nRetriever 동적 로드"]
+        Multi["FAISS × 12\n도메인별 병렬 비동기 검색\nasyncio.gather()"]
+        Loader --> Multi
+    end
+
+    subgraph POST["✨ Post-Retrieval"]
+        direction TB
+        Agg["AggregatorService\n결과 병합 + 중복 제거"]
+        Sum["SummarizerService\nOllama exaone3.5:7.8b\n답변 생성"]
+        Src["SourceService\n출처 URL 매핑"]
+        Agg --> Sum --> Src
+    end
+
+    API --> PRE
+    PRE --> RET
+    RET --> POST
+    POST --> Answer["✅ 최종 답변"]
+    Answer --> DB["MongoDB 로그 저장"]
+
+    Intent -->|"인사/메타/통계"| Quick["⚡ 즉시 응답\n검색 미수행"]
+    Grade -->|"급수 질문"| GradeAns["⚡ 급수 즉시 응답"]

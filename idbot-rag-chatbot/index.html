@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IDBOT — RAG 기반 법정감염병 안내 AI 챗봇 | dohunhyeong</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --blue: #2563EB;
+      --blue-light: #60A5FA;
+      --cyan: #38bdf8;
+      --navy: #0F172A;
+      --navy-card: #1E293B;
+      --navy-deep: #0d1f3c;
+      --bg: #0F172A;
+      --white: #F8FAFC;
+      --gray: #94A3B8;
+      --gray-dim: #475569;
+      --border: rgba(255,255,255,0.08);
+      --border-blue: rgba(37,99,235,0.3);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--white); line-height: 1.7; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 60px; height: 64px;
+      background: rgba(15,23,42,0.9); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-weight: 900; font-size: 18px; color: var(--white); text-decoration: none; letter-spacing: -0.5px; }
+    .nav-logo em { color: var(--blue-light); font-style: normal; }
+    .nav-right { display: flex; gap: 28px; align-items: center; }
+    .nav-right a { color: var(--gray); font-size: 14px; text-decoration: none; transition: color 0.2s; }
+    .nav-right a:hover { color: var(--white); }
+
+    /* HERO */
+    .hero {
+      padding: 140px 24px 80px;
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(37,99,235,0.2) 0%, transparent 70%);
+      text-align: center;
+    }
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; color: var(--blue-light);
+      letter-spacing: 2px; margin-bottom: 20px;
+      border: 1px solid rgba(96,165,250,0.3);
+      padding: 5px 18px; border-radius: 20px;
+      background: rgba(37,99,235,0.08);
+      display: inline-block;
+    }
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 60px); font-weight: 900;
+      line-height: 1.2; letter-spacing: -2px; margin-bottom: 20px;
+    }
+    .hero h1 em { color: var(--blue-light); font-style: normal; }
+    .hero-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; margin: 32px 0; }
+    .meta-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .meta-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gray-dim); letter-spacing: 1px; text-transform: uppercase; }
+    .meta-value { font-size: 15px; font-weight: 700; color: var(--white); }
+    .meta-value a { color: var(--blue-light); text-decoration: none; }
+    .meta-value a:hover { text-decoration: underline; }
+    .hero-badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 32px; }
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; padding: 5px 14px; border-radius: 4px;
+    }
+    .badge-blue { color: var(--blue-light); border: 1px solid rgba(96,165,250,0.3); background: rgba(37,99,235,0.1); }
+    .badge-cyan { color: var(--cyan); border: 1px solid rgba(56,189,248,0.3); background: rgba(56,189,248,0.08); }
+    .badge-gray { color: var(--gray); border: 1px solid var(--border); background: rgba(255,255,255,0.03); }
+
+    /* LAYOUT */
+    .page-body { max-width: 1100px; margin: 0 auto; padding: 0 24px 100px; }
+
+    /* SECTION */
+    .section { padding: 72px 0 0; }
+    .section-header { margin-bottom: 40px; }
+    .section-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; color: var(--blue-light);
+      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;
+    }
+    .section-title { font-size: clamp(24px, 3vw, 36px); font-weight: 900; letter-spacing: -1px; }
+    .section-sub { font-size: 15px; color: var(--gray); margin-top: 8px; }
+
+    /* DIVIDER */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 72px 0 0; }
+
+    /* INFO CARD */
+    .info-card {
+      background: var(--navy-card);
+      border: 1px solid var(--border);
+      padding: 28px 32px;
+    }
+    .info-card p { font-size: 16px; color: var(--gray); line-height: 1.9; margin-bottom: 14px; }
+    .info-card p:last-child { margin-bottom: 0; }
+    .info-card p strong { color: var(--white); }
+
+    /* TABLE */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+    .data-table th, .data-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+    .data-table th { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--blue-light); letter-spacing: 1px; text-transform: uppercase; background: var(--navy-deep); }
+    .data-table td { color: var(--gray); }
+    .data-table td strong { color: var(--white); }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table .highlight-row td { background: rgba(37,99,235,0.06); }
+    .data-table .highlight-row td strong { color: var(--blue-light); }
+    .table-wrap { border: 1px solid var(--border); overflow: hidden; }
+
+    /* TWO COLUMNS */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+    /* METRIC CARD */
+    .metric-card {
+      background: var(--navy-card);
+      border: 1px solid var(--border);
+      padding: 24px 28px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .metric-card.accent { border-color: var(--border-blue); background: rgba(37,99,235,0.07); }
+    .metric-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--gray-dim); letter-spacing: 1px; }
+    .metric-v1 { font-size: 20px; font-weight: 700; color: var(--gray); }
+    .metric-v2 { font-size: 28px; font-weight: 900; color: var(--blue-light); }
+    .metric-delta { font-size: 13px; color: var(--cyan); font-weight: 700; }
+
+    /* ARCH DIAGRAM */
+    .arch-container {
+      background: var(--navy-deep);
+      border: 1px solid var(--border-blue);
+      padding: 32px;
+      text-align: center;
+    }
+    .arch-container img { max-width: 100%; height: auto; border-radius: 4px; }
+    .arch-caption { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--gray-dim); margin-top: 16px; letter-spacing: 1px; }
+
+    /* PIPELINE STEP */
+    .pipeline-steps { display: flex; flex-direction: column; gap: 0; }
+    .pipeline-step {
+      display: flex; gap: 0; align-items: stretch;
+    }
+    .step-num {
+      width: 48px; flex-shrink: 0;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .step-circle {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--blue); display: flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; color: var(--white);
+      flex-shrink: 0;
+    }
+    .step-line { width: 2px; flex: 1; background: var(--border-blue); margin: 4px auto; }
+    .pipeline-step:last-child .step-line { display: none; }
+    .step-content { flex: 1; padding: 0 0 28px 20px; }
+    .step-title { font-size: 18px; font-weight: 700; color: var(--white); margin-bottom: 6px; }
+    .step-desc { font-size: 14px; color: var(--gray); line-height: 1.8; }
+    .step-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .step-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--gray-dim);
+      border: 1px solid var(--border); padding: 2px 8px;
+    }
+
+    /* CODE BLOCK */
+    .code-block {
+      background: #0d1117; border: 1px solid var(--border);
+      padding: 20px 24px; overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace; font-size: 13px;
+      color: #e2e8f0; line-height: 1.7;
+    }
+    .code-block .comment { color: #64748b; }
+    .code-block .keyword { color: #60a5fa; }
+    .code-block .string { color: #86efac; }
+
+    /* LIMIT / SUCCESS ITEM */
+    .item-list { display: flex; flex-direction: column; gap: 16px; }
+    .item-row {
+      display: flex; gap: 16px; align-items: flex-start;
+      background: var(--navy-card); border: 1px solid var(--border);
+      padding: 18px 20px;
+    }
+    .item-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+    .item-title { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+    .item-desc { font-size: 14px; color: var(--gray); line-height: 1.7; }
+    .item-desc strong { color: var(--blue-light); }
+
+    /* BACK LINK */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--gray); font-size: 14px; text-decoration: none;
+      margin-bottom: 40px; margin-top: 80px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--white); }
+
+    /* FOOTER */
+    footer {
+      text-align: center; padding: 48px 24px;
+      border-top: 1px solid var(--border);
+      color: var(--gray-dim); font-size: 14px;
+    }
+    footer a { color: var(--blue-light); text-decoration: none; }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .two-col { grid-template-columns: 1fr; }
+      .three-col { grid-template-columns: 1fr 1fr; }
+      .hero-meta { gap: 16px; }
+    }
+    @media (max-width: 480px) {
+      .three-col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">dohun<em>hyeong</em></a>
+  <div class="nav-right">
+    <a href="/#projects">Projects</a>
+    <a href="/#about">About</a>
+    <a href="https://github.com/dohunhyeong" target="_blank">GitHub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">AI Engineering · RAG · LLM · Full-Stack</div>
+  <h1>RAG 기반 법정감염병 안내<br><em>AI 챗봇 — IDBOT</em></h1>
+  <div class="hero-meta">
+    <div class="meta-item">
+      <span class="meta-label">기간</span>
+      <span class="meta-value">2024.06 – 2025.12 (2개년)</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">역할</span>
+      <span class="meta-value">Full-Stack Developer &amp; Lead</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">발주처</span>
+      <span class="meta-value">부산광역시 감염병관리지원단</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">배포 URL</span>
+      <span class="meta-value"><a href="http://idbot.or.kr" target="_blank">idbot.or.kr ↗</a></span>
+    </div>
+  </div>
+  <div class="hero-badges">
+    <span class="badge badge-cyan">Zero API Cost 달성</span>
+    <span class="badge badge-blue">지식 베이스 7.8배 확장</span>
+    <span class="badge badge-blue">Advanced RAG 도입</span>
+    <span class="badge badge-gray">실서비스 운영 중</span>
+    <span class="badge badge-gray">누적 질의 3,000건+</span>
+  </div>
+</div>
+
+<div class="page-body">
+
+  <a href="/" class="back-link">← 포트폴리오 홈으로</a>
+
+  <!-- 1. 프로젝트 개요 -->
+  <div class="section" id="overview">
+    <div class="section-header">
+      <div class="section-eyebrow">// 01 Overview</div>
+      <h2 class="section-title">프로젝트 개요 및 배경</h2>
+      <p class="section-sub">의료 현장의 정보 접근성 문제를 AI로 해결한 2개년 프로젝트</p>
+    </div>
+    <div class="info-card">
+      <p>부산광역시 감염병관리지원단은 매년 전국 의료기관에 <strong>법정감염병 144종</strong>에 대한 핸드북을 발간합니다. 그러나 긴급한 대응이 요구되는 의료 현장에서 수백 페이지의 문서를 수동으로 검색하는 방식은 시간적 비효율과 정보 접근성 저해를 초래했습니다.</p>
+      <p>이 구조적 문제를 해결하기 위해 <strong>자연어 질의로 즉시 원하는 정보를 찾아주는 AI 챗봇 시스템</strong>의 개발이 요구되었으며, 발주처는 세 가지 핵심 요구사항을 제시했습니다.</p>
+    </div>
+    <div style="margin-top: 24px;" class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr><th>#</th><th>요구사항</th><th>기술적 과제</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>1</strong></td><td>144종 법정감염병 <strong>최신 지침서 내용 100% 반영</strong></td><td>문서 전처리 파이프라인 + 벡터 DB 설계</td></tr>
+          <tr><td><strong>2</strong></td><td>답변 시 공식 문서의 <strong>출처 URL 반드시 표기</strong></td><td>메타데이터 설계 및 Source 매핑 로직</td></tr>
+          <tr><td><strong>3</strong></td><td>제공 문서 범위 내에서만 답변 — <strong>할루시네이션 방지</strong></td><td>RAG 구조 + 프롬프트 엔지니어링</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- 2. Fine-tuning vs RAG -->
+  <div class="section" id="approach">
+    <div class="section-header">
+      <div class="section-eyebrow">// 02 Technical Decision</div>
+      <h2 class="section-title">Fine-tuning vs RAG — 기술 선택의 근거</h2>
+      <p class="section-sub">의료 도메인 특성을 고려한 아키텍처 결정</p>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr><th>비교 항목</th><th>Fine-tuning</th><th>RAG (채택)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>지식 업데이트</strong></td><td>재학습 필요 (High Cost)</td><td>문서 교체만으로 즉시 반영</td></tr>
+          <tr><td><strong>할루시네이션</strong></td><td>통제 어려움</td><td>검색 문서 기반으로 억제 가능</td></tr>
+          <tr><td><strong>출처 표기</strong></td><td>불가능</td><td>공식 문서 URL 연결 가능</td></tr>
+          <tr><td><strong>하드웨어 요구사항</strong></td><td>7B 모델 기준 24GB~48GB+ VRAM</td><td>인퍼런스 전용 GPU만 필요</td></tr>
+          <tr class="highlight-row"><td><strong>의료 도메인 적합성</strong></td><td>낮음 (신뢰성 문제)</td><td><strong>높음 (출처 추적 + 할루시네이션 억제)</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- 3. v1 아키텍처 -->
+  <div class="section" id="v1">
+    <div class="section-header">
+      <div class="section-eyebrow">// 03 IDBOT v1 (2024)</div>
+      <h2 class="section-title">1차년도 — Naive RAG 구축</h2>
+      <p class="section-sub">144종 질병 정보를 1,440개 HTML로 원자화한 Naive RAG 시스템</p>
+    </div>
+
+    <div class="arch-container">
+      <img src="./images/v1-architecture.png" alt="IDBOT v1 Naive RAG 아키텍처 다이어그램" />
+      <div class="arch-caption">IDBOT v1 — Naive RAG Architecture (2024)</div>
+    </div>
+
+    <div style="margin-top: 32px;">
+      <div class="two-col">
+        <div>
+          <h3 style="font-size:18px; font-weight:700; margin-bottom:16px; color:var(--blue-light);">핵심 설계: 1,440개 HTML 원자화</h3>
+          <div class="info-card">
+            <p>144종 질병 정보를 <strong>10개 카테고리(질병 개요, 증상, 진단, 치료, 예방 등)로 분절</strong>하여 총 1,440개의 독립적인 HTML 문서로 원자화했습니다. 보건의료 전문가와의 협업을 통해 의료 현장에서 실제로 어떤 정보 단위로 검색이 이루어지는지를 반영한 설계입니다.</p>
+            <p>각 HTML 문서는 <strong>Netlify를 통해 개별 URL</strong>을 부여받아, 발주처의 핵심 요구사항인 '출처 URL 표기'를 기술적으로 구현했습니다.</p>
+          </div>
+        </div>
+        <div>
+          <h3 style="font-size:18px; font-weight:700; margin-bottom:16px; color:var(--blue-light);">주요 기술 스택</h3>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>영역</th><th>기술</th></tr></thead>
+              <tbody>
+                <tr><td>LLM</td><td>OpenAI GPT API</td></tr>
+                <tr><td>Embedding</td><td>text-embedding-3-small</td></tr>
+                <tr><td>Vector DB</td><td>FAISS (단일 인덱스)</td></tr>
+                <tr><td>Backend</td><td>FastAPI + Uvicorn</td></tr>
+                <tr><td>Framework</td><td>LangChain</td></tr>
+                <tr><td>문서 호스팅</td><td>Netlify (1,440개 URL)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 32px;">
+      <h3 style="font-size:18px; font-weight:700; margin-bottom:16px; color:var(--white);">1차년도 운영 중 발견된 5대 한계점</h3>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>구분</th><th>한계</th><th>원인</th><th>영향</th></tr></thead>
+          <tbody>
+            <tr><td>기술</td><td><strong>표 구조 손실</strong></td><td>WebBaseLoader가 HTML 표를 텍스트로 평면화</td><td>핵심 정보인 표 데이터가 컨텍스트에서 왜곡 → 답변 품질 저하</td></tr>
+            <tr><td>기술</td><td><strong>동의어 미처리</strong></td><td>"신종플루" ↔ "신종인플루엔자 A" 등 매핑 로직 부재</td><td>동의어 질문 시 엉뚱한 문서 검색 → 오류 응답</td></tr>
+            <tr><td>비용</td><td><strong>API 비용 누적</strong></td><td>OpenAI API 종량제 의존</td><td>운영 비용 예측 불가, 장기 운영 부담</td></tr>
+            <tr><td>코드</td><td><strong>유지보수 어려움</strong></td><td>main.py에 모든 로직 집중</td><td>기능 추가·수정 시 코드 파악 비용 증가</td></tr>
+            <tr><td>운영</td><td><strong>관리자 조회 부재</strong></td><td>별도 관리 인터페이스 없음</td><td>월별 보고를 위해 DB에 직접 접근해야 하는 불편</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- 4. v2 아키텍처 -->
+  <div class="section" id="v2">
+    <div class="section-header">
+      <div class="section-eyebrow">// 04 IDBOT v2 (2025)</div>
+      <h2 class="section-title">2차년도 — Advanced RAG 고도화</h2>
+      <p class="section-sub">Pre-Retrieval → Retrieval → Post-Retrieval 3단계 파이프라인으로 전면 재설계</p>
+    </div>
+
+    <div class="arch-container">
+      <img src="./images/v2-architecture.png" alt="IDBOT v2 Advanced RAG 아키텍처 다이어그램" />
+      <div class="arch-caption">IDBOT v2 — Advanced RAG 3-Stage Pipeline Architecture (2025)</div>
+    </div>
+
+    <div style="margin-top: 40px;">
+      <h3 style="font-size:20px; font-weight:700; margin-bottom:24px; color:var(--white);">3단계 파이프라인 상세</h3>
+      <div class="pipeline-steps">
+        <div class="pipeline-step">
+          <div class="step-num">
+            <div class="step-circle">1</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Pre-Retrieval — 질문 전처리 및 라우팅</div>
+            <div class="step-desc">
+              <strong style="color:var(--blue-light);">IntentService</strong>가 질문 유형(인사/챗봇정보/통계/질병질의)을 분류하여 불필요한 벡터 검색을 조기 차단합니다.
+              <strong style="color:var(--blue-light);">NormalizationService</strong>는 142종 동의어 사전을 통해 "신종플루" → "신종인플루엔자 A(H1N1)"로 자동 변환하고,
+              <strong style="color:var(--blue-light);">RoutingService</strong>가 키워드 분석을 통해 최적의 Vector Store를 결정합니다.
+            </div>
+            <div class="step-tags">
+              <span class="step-tag">IntentService</span>
+              <span class="step-tag">NormalizationService</span>
+              <span class="step-tag">GradeService</span>
+              <span class="step-tag">RoutingService</span>
+            </div>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-num">
+            <div class="step-circle">2</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Retrieval — 12개 도메인별 FAISS 병렬 검색</div>
+            <div class="step-desc">
+              <strong style="color:var(--blue-light);">RetrieverLoader</strong>가 라우팅 결과에 따라 Retriever를 동적 로드하고,
+              <strong style="color:var(--blue-light);">asyncio.gather()</strong>를 통해 12개 도메인별 FAISS 인덱스를 병렬 비동기 검색합니다.
+              단일 인덱스 대비 검색 정확도를 높이면서 레이턴시를 2초 이내로 관리합니다.
+            </div>
+            <div class="step-tags">
+              <span class="step-tag">RetrieverLoader</span>
+              <span class="step-tag">FAISS × 12</span>
+              <span class="step-tag">asyncio.gather()</span>
+              <span class="step-tag">bge-m3 Embedding</span>
+            </div>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-num">
+            <div class="step-circle">3</div>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Post-Retrieval — 결과 병합, 답변 생성, 출처 태깅</div>
+            <div class="step-desc">
+              <strong style="color:var(--blue-light);">AggregatorService</strong>가 복수 Retriever 결과를 병합하고 중복을 제거합니다.
+              <strong style="color:var(--blue-light);">SummarizerService</strong>가 Ollama EXAONE 3.5 7.8B로 근거 기반 최종 답변을 생성하며,
+              <strong style="color:var(--blue-light);">SourceService</strong>가 공식 문서 출처 URL을 자동 매핑하여 답변에 추가합니다.
+            </div>
+            <div class="step-tags">
+              <span class="step-tag">AggregatorService</span>
+              <span class="step-tag">SummarizerService</span>
+              <span class="step-tag">SourceService</span>
+              <span class="step-tag">EXAONE 3.5 7.8B</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- 5. 전처리 파이프라인 -->
+  <div class="section" id="preprocessing">
+    <div class="section-header">
+      <div class="section-eyebrow">// 05 Data Pipeline</div>
+      <h2 class="section-title">문서 전처리 파이프라인 혁신</h2>
+      <p class="section-sub">LLM 호출 0회 — 완전한 재현성과 Zero Cost 전처리</p>
+    </div>
+
+    <div class="info-card" style="border-color: var(--border-blue); background: rgba(37,99,235,0.05); margin-bottom: 28px;">
+      <p><strong>핵심 설계 결정:</strong> 파이프라인 전체에서 GPT·Gemini 등 생성형 LLM을 사용하지 않았습니다. 문서 파싱은 <strong>Upstage Document Parse API(OCR)</strong>에, 구조화 로직은 <strong>순수 Python 정규식·문자열 파싱</strong>에 위임하여 비용과 레이턴시를 최소화하고 동일 입력에 대한 완전한 재현성을 보장했습니다.</p>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3 style="font-size:17px; font-weight:700; margin-bottom:16px; color:var(--blue-light);">Pipeline A: 관리 지침서 처리</h3>
+        <div class="info-card">
+          <p>카테고리별 관리 지침서 11종을 각각 독립적인 FAISS 인덱스로 구축합니다. Upstage API가 모든 제목을 <code style="color:var(--cyan);">#</code> 단일 레벨로 반환하는 한계를 극복하기 위해, 정규식 패턴 매칭으로 <strong>H1/H2/H3 논리적 계층 구조를 재구축</strong>하는 헤딩 계층 승격(Heading Elevation) 기법을 적용했습니다.</p>
+        </div>
+        <div class="code-block" style="margin-top:16px;">
+<span class="comment"># 헤딩 계층 승격 패턴</span>
+H1_PATTERNS = [re.compile(<span class="string">r"^제\s*\d+\s*장"</span>), ...]
+H2_PATTERNS = [re.compile(<span class="string">r"^\d+[\.\s]+\S"</span>), ...]
+H3_PATTERNS = [re.compile(<span class="string">r"^\d+\)\s"</span>), ...]
+<span class="comment"># 결과: H1 2,426 + H2 2,740 + H3 4,106 생성</span>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size:17px; font-weight:700; margin-bottom:16px; color:var(--blue-light);">Pipeline B: 알아보기 문서 처리 (LangGraph)</h3>
+        <div class="info-card">
+          <p>약 1,400개의 PDF를 처리하기 위해 <strong>LangGraph 5노드 그래프</strong>를 설계했습니다. 핵심 후처리 로직인 <code style="color:var(--cyan);">convert_table_to_sections()</code>는 Upstage API가 반환하는 2열 표를 섹션 구조로 변환하여 청킹 시 의미 단위가 완벽하게 보존되도록 했습니다.</p>
+          <p><strong>MD5 해시 키 기반 캐싱 시스템</strong>을 구현하여, 1,400개 파일 처리 중 어느 시점에 중단되더라도 안전하게 재개할 수 있습니다.</p>
+        </div>
+        <div class="code-block" style="margin-top:16px;">
+<span class="comment"># 표 → 섹션 변환</span>
+<span class="comment"># 변환 전: | 감염병 분류 | ◦ 제1급 법정감염병 |</span>
+<span class="comment"># 변환 후: ## 감염병 분류\n◦ 제1급 법정감염병</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- 6. 로컬 LLM -->
+  <div class="section" id="llm">
+    <div class="section-header">
+      <div class="section-eyebrow">// 06 Local LLM</div>
+      <h2 class="section-title">로컬 LLM 전환 — Zero API Cost 달성</h2>
+      <p class="section-sub">EXAONE 3.5 7.8B + bge-m3로 외부 API 의존성 완전 제거</p>
+    </div>
+    <div class="two-col">
+      <div>
+        <h3 style="font-size:17px; font-weight:700; margin-bottom:16px; color:var(--blue-light);">LLM 모델 비교 선택</h3>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>모델</th><th>한국어 성능</th><th>Long Context</th><th>채택</th></tr></thead>
+            <tbody>
+              <tr class="highlight-row"><td><strong>EXAONE 3.5 7.8B</strong></td><td><strong>7.96 / 9.08 (1위)</strong></td><td>32K 토큰</td><td><strong>✅ 채택</strong></td></tr>
+              <tr><td>Qwen 2.5 7B</td><td>5.19 / 6.38</td><td>128K 토큰</td><td>제외</td></tr>
+              <tr><td>Llama 3.1 8B</td><td>4.85 / 5.99</td><td>128K 토큰</td><td>제외</td></tr>
+              <tr><td>Gemma 2 9B</td><td>7.10 / 8.05</td><td>8K 토큰</td><td>제외</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size:17px; font-weight:700; margin-bottom:16px; color:var(--blue-light);">임베딩 모델 비교 선택</h3>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>모델</th><th>한국어 성능</th><th>API 필요</th><th>채택</th></tr></thead>
+            <tbody>
+              <tr class="highlight-row"><td><strong>bge-m3</strong></td><td><strong>최상위권 (MTEB)</strong></td><td>없음 (로컬)</td><td><strong>✅ 채택</strong></td></tr>
+              <tr><td>text-embedding-3-small</td><td>우수</td><td>종량제</td><td>제외</td></tr>
+              <tr><td>KoE5</td><td>중간</td><td>없음</td><td>제외</td></tr>
+              <tr><td>multilingual-e5-large</td><td>중간</td><td>없음</td><td>제외</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- 7. 배포 아키텍처 -->
+  <div class="section" id="deployment">
+    <div class="section-header">
+      <div class="section-eyebrow">// 07 Deployment</div>
+      <h2 class="section-title">배포 아키텍처</h2>
+      <p class="section-sub">Ubuntu 22.04 + RTX 4090 서버에 Docker 기반 멀티 서비스 배포</p>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>컨테이너</th><th>역할</th><th>포트</th></tr></thead>
+        <tbody>
+          <tr><td><code style="color:var(--cyan);">busan-chatbot</code></td><td>Nginx + React SPA 정적 파일 서빙</td><td>80</td></tr>
+          <tr><td><code style="color:var(--cyan);">busancidc-back2</code></td><td>FastAPI + RAG Pipeline</td><td>8000</td></tr>
+          <tr><td><code style="color:var(--cyan);">mongodb</code></td><td>질의응답 로그 저장</td><td>37017</td></tr>
+          <tr><td><code style="color:var(--cyan);">Ollama (Host)</code></td><td>LLM + 임베딩 서빙 (RTX 4090 GPU 활용)</td><td>11434</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="info-card" style="margin-top:20px;">
+      <p>Nginx는 리버스 프록시로서 SPA 정적 파일 서빙과 <code style="color:var(--cyan);">/query</code>, <code style="color:var(--cyan);">/admin</code> 경로를 백엔드로 전달합니다. LLM 응답 시간을 고려하여 <strong>proxy_*_timeout을 600초로 설정</strong>하고, NVIDIA 드라이버 버전은 <code style="color:var(--cyan);">apt-mark hold</code>로 고정하여 자동 업데이트로 인한 커널 모듈 불일치를 방지했습니다.</p>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- 8. 성과 비교 -->
+  <div class="section" id="results">
+    <div class="section-header">
+      <div class="section-eyebrow">// 08 Results</div>
+      <h2 class="section-title">정량적 성과 비교</h2>
+      <p class="section-sub">2개년에 걸친 시스템 고도화의 비약적인 성능 향상</p>
+    </div>
+    <div class="three-col" style="margin-bottom:28px;">
+      <div class="metric-card accent">
+        <div class="metric-label">OPERATING COST</div>
+        <div class="metric-v1">OpenAI 종량제</div>
+        <div class="metric-v2">0원</div>
+        <div class="metric-delta">Zero API Cost 달성</div>
+      </div>
+      <div class="metric-card accent">
+        <div class="metric-label">KNOWLEDGE BASE</div>
+        <div class="metric-v1">1,440 문서</div>
+        <div class="metric-v2">11,246 청크</div>
+        <div class="metric-delta">7.8배 확장</div>
+      </div>
+      <div class="metric-card accent">
+        <div class="metric-label">ANSWER RELEVANCY</div>
+        <div class="metric-v1">75%</div>
+        <div class="metric-v2">~80%</div>
+        <div class="metric-delta">+5%p 향상</div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>핵심 지표</th><th>v1 (2024)</th><th>v2 (2025)</th><th>개선 효과</th></tr></thead>
+        <tbody>
+          <tr><td>Answer Relevancy</td><td>75%</td><td>~80%</td><td><strong>+5%p 향상</strong></td></tr>
+          <tr><td>운영 비용</td><td>OpenAI 종량제 과금</td><td>로컬 LLM (0원)</td><td><strong>Zero API Cost</strong></td></tr>
+          <tr><td>데이터 규모</td><td>1,440 문서 (단일 인덱스)</td><td>11,246 청크 (12개 인덱스)</td><td><strong>7.8배 확장</strong></td></tr>
+          <tr><td>문서 구조 보존</td><td>표 데이터 → 평문 손실</td><td>표 → 섹션 변환 보존</td><td><strong>정보 신뢰성 100%</strong></td></tr>
+          <tr><td>동의어 처리</td><td>미지원</td><td>142종 매핑 지원</td><td><strong>검색 정확도 대폭 향상</strong></td></tr>
+          <tr><td>코드 구조</td><td>단일 파일 집중 (main.py)</td><td>10개 서비스 클래스 분리</td><td><strong>유지보수성 극대화</strong></td></tr>
+          <tr><td>관측성</td><td>단순 DB 로그</td><td>Langfuse + 관리자 대시보드</td><td><strong>체계적 모니터링</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- 9. 회고 -->
+  <div class="section" id="retrospective">
+    <div class="section-header">
+      <div class="section-eyebrow">// 09 Retrospective</div>
+      <h2 class="section-title">기술적 회고</h2>
+      <p class="section-sub">성공 요인, 트러블슈팅, 향후 개선 방향</p>
+    </div>
+    <div class="item-list" style="margin-bottom:32px;">
+      <div class="item-row">
+        <div class="item-icon">🏆</div>
+        <div>
+          <div class="item-title">LLM 없는 전처리 파이프라인</div>
+          <div class="item-desc">정규식 기반 파이프라인으로 <strong>비용 0원, 완전한 재현성</strong>을 확보했습니다. 동일 입력에 대해 항상 같은 결과를 보장하므로 디버깅과 품질 관리가 용이했습니다.</div>
+        </div>
+      </div>
+      <div class="item-row">
+        <div class="item-icon">⚡</div>
+        <div>
+          <div class="item-title">멀티 리트리버 + 비동기 병렬 검색</div>
+          <div class="item-desc">12개 도메인별 FAISS 인덱스를 <strong>asyncio.gather()로 병렬 비동기 검색</strong>하여, 단일 인덱스 대비 검색 정확도를 높이면서도 레이턴시를 2초 이내로 관리했습니다.</div>
+        </div>
+      </div>
+      <div class="item-row">
+        <div class="item-icon">🔬</div>
+        <div>
+          <div class="item-title">Langfuse 기반 관측성 확보</div>
+          <div class="item-desc">RAG 파이프라인의 각 단계를 트레이싱하여 <strong>병목 구간을 정량적으로 파악</strong>하고 개선할 수 있는 기반을 마련했습니다.</div>
+        </div>
+      </div>
+      <div class="item-row">
+        <div class="item-icon">🔧</div>
+        <div>
+          <div class="item-title">트러블슈팅: 의존성 충돌 해결</div>
+          <div class="item-desc">HuggingFace, Torch 등 라이브러리 간 버전 충돌로 Docker 빌드가 실패하는 문제를 <strong>Poetry를 통한 엄격한 버전 관리 체계</strong> 도입으로 해결했습니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-size:18px; font-weight:700; margin-bottom:16px; color:var(--white);">향후 개선 방향 (v3)</h3>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>과제</th><th>내용</th><th>기대 효과</th></tr></thead>
+        <tbody>
+          <tr><td><strong>RAG 평가 자동화</strong></td><td>RAGAS 프레임워크 활용 자동 평가 파이프라인</td><td>정량적 품질 관리 및 지속적 성능 개선</td></tr>
+          <tr><td><strong>스트리밍 응답</strong></td><td>SSE / WebSocket 기반 스트리밍 도입</td><td>사용자 체감 대기 시간 단축</td></tr>
+          <tr><td><strong>멀티턴 대화</strong></td><td>대화 컨텍스트 유지 메모리 시스템 통합</td><td>자연스럽고 연속적인 상담 경험</td></tr>
+          <tr><td><strong>하이브리드 검색</strong></td><td>시맨틱 검색(Vector) + 키워드 검색(BM25) 결합</td><td>고유 명사 및 전문 용어 검색 정확도 극대화</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- 10. 기술 스택 -->
+  <div class="section" id="stack">
+    <div class="section-header">
+      <div class="section-eyebrow">// 10 Tech Stack</div>
+      <h2 class="section-title">기술 스택 총정리</h2>
+      <p class="section-sub">2개년에 걸쳐 전 영역을 고도화한 완전한 기술 스택 전환</p>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>영역</th><th>v1 (2024)</th><th>v2 (2025)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>LLM</strong></td><td>OpenAI GPT API</td><td>Ollama EXAONE 3.5 7.8B (로컬)</td></tr>
+          <tr><td><strong>Embedding</strong></td><td>text-embedding-3-small</td><td>bge-m3 (로컬, 1,024차원)</td></tr>
+          <tr><td><strong>Vector DB</strong></td><td>FAISS (단일 인덱스)</td><td>FAISS × 12 (도메인별 분리)</td></tr>
+          <tr><td><strong>문서 파싱</strong></td><td>WebBaseLoader (HTML)</td><td>Upstage Document Parse API (PDF OCR)</td></tr>
+          <tr><td><strong>파이프라인</strong></td><td>LangChain</td><td>LangChain + LangGraph</td></tr>
+          <tr><td><strong>Backend</strong></td><td>FastAPI + Uvicorn</td><td>FastAPI + Uvicorn (비동기 Motor)</td></tr>
+          <tr><td><strong>Frontend</strong></td><td>HTML/CSS/JS</td><td>React 19 + Vite + Tailwind CSS</td></tr>
+          <tr><td><strong>배포</strong></td><td>Docker</td><td>Docker + Nginx + Ollama (RTX 4090)</td></tr>
+          <tr><td><strong>관측성</strong></td><td>MongoDB 로그</td><td>Langfuse + MongoDB + Jinja2 대시보드</td></tr>
+          <tr><td><strong>의존성 관리</strong></td><td>pip</td><td>Poetry (엄격한 버전 잠금)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <a href="/" class="back-link" style="display:inline-flex; margin-top:72px; margin-bottom:0;">← 포트폴리오 홈으로</a>
+
+</div>
+
+<footer>
+  <p>© <span id="footer-year"></span> dohunhyeong &nbsp;·&nbsp; <a href="https://github.com/dohunhyeong/portfolio" target="_blank">GitHub Repository</a></p>
+</footer>
+
+<script>
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
