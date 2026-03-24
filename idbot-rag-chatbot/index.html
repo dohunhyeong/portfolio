@@ -474,10 +474,10 @@
           <p>카테고리별 관리 지침서 11종을 각각 독립적인 FAISS 인덱스로 구축합니다. Upstage API가 모든 제목을 <code style="color:var(--cyan);">#</code> 단일 레벨로 반환하는 한계를 극복하기 위해, 정규식 패턴 매칭으로 <strong>H1/H2/H3 논리적 계층 구조를 재구축</strong>하는 헤딩 계층 승격(Heading Elevation) 기법을 적용했습니다.</p>
         </div>
         <div class="code-block" style="margin-top:16px;">
-<span class="comment"># 헤딩 계층 승격 패턴</span>
-H1_PATTERNS = [re.compile(<span class="string">r"^제\s*\d+\s*장"</span>), ...]
-H2_PATTERNS = [re.compile(<span class="string">r"^\d+[\.\s]+\S"</span>), ...]
-H3_PATTERNS = [re.compile(<span class="string">r"^\d+\)\s"</span>), ...]
+<span class="comment"># 헤딩 계층 승격 패턴</span><br>
+H1_PATTERNS = [re.compile(<span class="string">r"^제\s*\d+\s*장"</span>), ...]<br>
+H2_PATTERNS = [re.compile(<span class="string">r"^\d+[\.\s]+\S"</span>), ...]<br>
+H3_PATTERNS = [re.compile(<span class="string">r"^\d+\)\s"</span>), ...]<br>
 <span class="comment"># 결과: H1 2,426 + H2 2,740 + H3 4,106 생성</span>
         </div>
       </div>
